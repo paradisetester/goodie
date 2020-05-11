@@ -1,0 +1,1 @@
+[04-May-2020 12:01:27 UTC] PHP Fatal error:  Cannot use Illuminate\Support\Facades\Validator as Validator because the name is already in use in /home/aisolsc8/public_html/goodie/app/Http/Controllers/dashboardController.php on line 16
