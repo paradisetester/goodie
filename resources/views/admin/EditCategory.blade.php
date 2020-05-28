@@ -20,10 +20,6 @@ Goodiemenu
             <label for="Name">Category Name</label>
             <input type="text" name="Name" id="Name" class="form-control" value="{{$category->Name}}" required>
           </div>
-          <div class="form-group">
-            <label for="Slug">Slug</label>
-            <input type="text" name="Slug" id="Slug" class="form-control" value="{{$category->Slug}}" required>
-          </div>
           <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Update</button>

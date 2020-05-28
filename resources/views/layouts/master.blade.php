@@ -60,34 +60,6 @@ The above copyright notice and this permission notice shall be included in all c
             </a>
           </li>
           @can('isAdmin')
-          
-          <li class="{{'restraunt/add' == request()->path() ? 'nav-item active' : ''}}">
-            <a class="nav-link" href="{{url('/restraunt/add')}}">
-                
-              <i class="material-icons">local_dining</i>
-              <p>Add Restaurants</p>
-            </a>
-          </li>
-          <li class="{{'restraunt/lists' == request()->path() ? 'nav-item active' : ''}}">
-            <a class="nav-link" href="{{url('/restraunt/lists')}}">
-                
-              <i class="material-icons">restaurant</i>
-              <p>View Restaurants</p>
-            </a>
-          </li>
-          <li class="{{'restraunt/menu/add' == request()->path() ? 'nav-item active' : ''}}">
-            <a class="nav-link" href="{{url('/restraunt/menu/add')}}">
-                
-              <i class="material-icons">menu_book</i>
-              <p>Add Menu's</p>
-            </a>
-          </li>
-          <li class="{{'menu/lists' == request()->path() ? 'nav-item active' : ''}}">
-            <a class="nav-link" href="{{url('/menu/lists')}}">
-              <i class="material-icons">menu_book</i>
-              <p>View Menu's</p>
-            </a>
-          </li>
           <li class="{{'category/add' == request()->path() ? 'nav-item active' : ''}}">
             <a class="nav-link" href="{{url('/category/add')}}">
                 
@@ -96,30 +68,81 @@ The above copyright notice and this permission notice shall be included in all c
             </a>
           </li>
           @endcan
-          
           @can('isAdmin')
-          <li class="{{'product/add' == request()->path() ? 'nav-item active' : ''}}">
+            <li><a class="dropdown-btn nav-link">Restaurant 
+            <i class="material-icons">local_dining</i>
+            <div class="drop_icon"><i class="fa fa-caret-down"></i>
+            </div>
+            </a>
+            <div class="dropdown-container">
+            <a class="nav-link" href="{{url('/restaurant/add')}}">
+            
+            <i class="material-icons">local_dining</i>
+            <p>Add Restaurant</p>
+            </a>
+            <a class="nav-link" href="{{url('/restaurant/lists')}}">
+            
+            <i class="material-icons">restaurant</i>
+            <p>View Restaurant</p>
+            </a>
+            </div>
+            </li>
+	 @endcan
+	 @can('isAdmin')
+	 <li><a class="dropdown-btn nav-link">Menu's 
+            <i class="material-icons">menu_book</i>
+            <div class="drop_icon"><i class="fa fa-caret-down"></i>
+            </div>
+            </a>
+            <div class="dropdown-container">
+            <a class="nav-link" href="{{url('/restaurant/menu/add')}}">
+                
+              <i class="material-icons">menu_book</i>
+              <p>Add Menu's</p>
+            </a>
+            <a class="nav-link" href="{{url('/menu/lists')}}">
+              <i class="material-icons">menu_book</i>
+              <p>View Menu's</p>
+            </a>
+            </div>
+            </li>
+      @endcan
+           
+           @can('isAdmin')
+	 <li><a class="dropdown-btn nav-link">Dish's 
+            <i class="material-icons">library_books</i>
+            <div class="drop_icon"><i class="fa fa-caret-down"></i>
+            </div>
+            </a>
+            <div class="dropdown-container">
             <a class="nav-link" href="{{url('/product/add')}}">
               <i class="material-icons">library_books</i>
-              <p>Add Products</p>
+              <p>Add Dish</p>
             </a>
-          </li>
-          @endcan
-          <li class="{{'product' == request()->path() ? 'nav-item active' : ''}}">
             <a class="nav-link" href="{{url('/product')}}">
               <i class="material-icons">library_books</i>
-              <p>View Products</p>
+              <p>View Dishes</p>
             </a>
-          </li>
-          @can('isAdmin')
-          <li class="{{'user/roles' == request()->path() ? 'nav-item active' : ''}}">
-            <a class="nav-link" href="{{url('/user/roles')}}">
-                
-              <i class="material-icons">how_to_reg</i>
-              <p>Users</p>
-            </a>
-          </li>
-           @endcan
+            </div>
+            </li>
+      @endcan
+       @can('isManager')
+        <li class="{{'product' == request()->path() ? 'nav-item active' : ''}}">
+        <a class="nav-link" href="{{url('/product')}}">
+        <i class="material-icons">library_books</i>
+        <p>View Dish</p>
+        </a>
+        </li>
+     @endcan
+      @can('isAdmin')
+      <li class="{{'user/roles' == request()->path() ? 'nav-item active' : ''}}">
+        <a class="nav-link" href="{{url('/user/roles')}}">
+            
+          <i class="material-icons">how_to_reg</i>
+          <p>Users</p>
+        </a>
+      </li>
+       @endcan
           <!-- <li class="nav-item ">
             <a class="nav-link" href="./notifications.html">
               <i class="material-icons">notifications</i>
@@ -256,6 +279,7 @@ The above copyright notice and this permission notice shall be included in all c
   
   <!--   Core JS Files   -->
   <script src="{{ asset('/assets/js/core/jquery.min.js') }}" defer></script>
+  <script src="{{ asset('/public/js/custom.js') }}" defer></script>
   <script src="{{ asset('/assets/js/core/popper.min.js') }}" defer></script>
   <script src="{{ asset('/assets/js/core/bootstrap-material-design.min.js') }}" defer></script>
 
@@ -493,6 +517,20 @@ The above copyright notice and this permission notice shall be included in all c
         });
       });
     });
+	var dropdown = document.getElementsByClassName("dropdown-btn");
+var i;
+
+for (i = 0; i < dropdown.length; i++) {
+  dropdown[i].addEventListener("click", function() {
+  this.classList.toggle("active");
+  var dropdownContent = this.nextElementSibling;
+  if (dropdownContent.style.display === "block") {
+  dropdownContent.style.display = "none";
+  } else {
+  dropdownContent.style.display = "block";
+  }
+  });
+}
   </script>
   @yield('scripts')
 </body>

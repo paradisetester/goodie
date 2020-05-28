@@ -17,6 +17,7 @@ class CreateRestaurentMenusTable extends Migration
             $table->bigIncrements('id');
             $table->integer('restaurant_id');
             $table->string('category_id');
+            $table->integer('orderby');
             $table->integer('status');
             $table->timestamps();
         });

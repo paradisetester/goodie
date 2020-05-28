@@ -9,7 +9,7 @@ Goodiemenu
     <div class="col-md-12">
       <div class="card">
         <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Restaurants Lists</h4>
+                  <h4 class="card-title ">Restaurant Lists</h4>
                   @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -109,8 +109,9 @@ Goodiemenu
                             <button type="submit" class="btn btn-sm btn-outline-success"><i class="fa fa-unlock"></i> Unblock</button>
                         </form>
                           @endif
-                          <a href="{{url('/restraunt/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-primary"><i class="fa fa-pencil"></i> Edit</a>
-                          <a href="{{route('restraunt.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Restraunt ?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</a>
+                           <a href="{{url('/restaurant/'.$row->slug)}}" class="btn btn-sm btn-outline-success" target="_blank"><i class="fa fa-eye"></i> View</a>
+                          <a href="{{url('/restaurant/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-primary"><i class="fa fa-pencil"></i> Edit</a>
+                          <a href="{{route('restraunt.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Restaurant ?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</a>
                           </td>
                         </tr>
                         @endforeach

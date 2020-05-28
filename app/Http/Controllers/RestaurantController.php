@@ -45,7 +45,8 @@ class RestaurantController extends Controller
     public function addRestraunt(Request $request) {
     $validator = Validator::make($request->all(), [ 
     'UserName' => 'required',
-    'restraunt_name' => 'required', 'string', 'max:255', 
+    'restraunt_name' => 'required', 'string', 'max:255', 'unique:restraunts',
+    'videolink' => 'required', 'string', 'max:255', 'unique:restraunts',
     'email' => 'required', 'string', 'email', 'max:255', 'unique:users',  
     'password' => 'required', 'string', 'min:8',
     'address' => 'required',  
@@ -60,6 +61,10 @@ class RestaurantController extends Controller
     Session::flash('error', $validator->messages()->first());
     return redirect()->back()->withInput();
     }
+
+    $restrantname = $request->input('restraunt_name');
+    $slug = str_replace(' ', '-', $restrantname);
+
     $user = new User;
     $user->name =$request->input('restraunt_name');
     $user->email =$request->input('email');
@@ -70,7 +75,9 @@ class RestaurantController extends Controller
     $Restraunt = new Restraunt;
     $Restraunt->UserName = $request->input('UserName');
     $Restraunt->restraunt_name = $request->input('restraunt_name');
+    $Restraunt->videolink = $request->input('videolink');
     $Restraunt->uid = $Auth;
+    $Restraunt->slug = $slug;
     $Restraunt->Assignuser = $user->id;
     $Restraunt->address = $request->input('address');
     $Restraunt->contact = $request->input('contact');
@@ -92,8 +99,8 @@ class RestaurantController extends Controller
     /*----- edit -----*/
     public function editrestraunt($ids) {
     $id = $this->decodeID($ids);
-    $ResId = Restraunt::where('id', $id)->where('status',1)->pluck('Assignuser');
-    $Restraunt = User::where('users.status',1)->where('users.id',$ResId)
+    $ResId = Restraunt::where('id', $id)->pluck('Assignuser');
+    $Restraunt = User::where('users.id',$ResId)
     ->leftjoin('restraunts','restraunts.Assignuser','=','users.id')
     ->select('users.*','restraunts.*')->first();
     $user = User::all();
@@ -110,6 +117,10 @@ class RestaurantController extends Controller
     $Restraunt->uid = $Auth;
     $Restraunt->UserName = $request->input('UserName');
     $Restraunt->restraunt_name = $request->input('restraunt_name');
+    $Restraunt->videolink = $request->input('videolink');
+    $restrantname = $request->input('restraunt_name');
+    $slug = str_replace(' ', '-', $restrantname);
+    $Restraunt->slug = $slug;
     $Restraunt->Assignuser = $Assuid;
     $Restraunt->address = $request->input('address');
     $Restraunt->contact = $request->input('contact');
@@ -138,6 +149,7 @@ class RestaurantController extends Controller
     $Auth=auth()->user()->id;
     $Restraunt->uid = $Auth;
     $Restraunt->UserName = $request->input('UserName');
+    $Restraunt->videolink = $request->input('videolink');
     $Restraunt->restraunt_name = $request->input('restraunt_name');
     $Restraunt->Assignuser = $Auth;
     $Restraunt->address = $request->input('address');
@@ -172,6 +184,6 @@ class RestaurantController extends Controller
     public function delete($id)
     {
     $Restraunt = Restraunt::where('id', $id)->delete();
-    return redirect()->route('product')->with('status','Product Deleted Successfully');
+    return redirect()->route('restraunt.lists')->with('status','Restraunt Deleted Successfully');
     }
 }

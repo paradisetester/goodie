@@ -18,21 +18,24 @@ Goodiemenu
                 <div class="card-body">
                     <form  id="" method="POST" action="{{route('restraunt.updateMenu')}}" enctype="multipart/form-data">
                       {{ csrf_field() }}
-                    <input type="hidden" name="id" value="{{$Restaurent_menu->id}}">
+                    <input type="hidden" name="id" value="{{$id}}">
                   <div class="form-group">
-                    <label for="exampleFormControlSelect1">Select Restraunt</label>
+                    <label for="exampleFormControlSelect1">Select Restaurant</label>
                     <br>
                         <select class="form-control" name="restaurant_id" value="" required>
                         @foreach($Restraunt as $row)
-                        <option value="{{ $row->id }}">{{ $row->restraunt_name }}</option>
+                        <option value="{{ $row->id }}" <?=($row->id==$id)?'selected':'';?>>{{ $row->restraunt_name }}</option>
                         @endforeach
                         </select>
                   </div>
                   <div class="form-group">
                     <label for="category_id">Choose Categories</label>
                     <br>
+				
                       @foreach($category as $cat)
-                      <input type="checkbox" class="check" id="category_id" name="category_id[]" value="{{ $cat->Name }}">
+					  <?php if(in_array($cat->id, $arrCat)){ $checked = 'checked="checked"'; } else{  $checked = ''; }?>
+					  
+					  <input type="checkbox" class="check" id="category_id" name="category_id[]" <?=$checked?> value="{{ $cat->id }}">
                       <label for="category_id"> {{ $cat->Name }}</label>
                       @endforeach
                   </div>

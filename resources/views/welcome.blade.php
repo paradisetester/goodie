@@ -72,20 +72,17 @@
                 <li><a  data-filter="all" >All</a></li>
                  @foreach($categorydata as $category)
                 <li><a data-filter="cat{{$category->id}}" >{{$category->Name}}</a></li>
-                @endforeach
+                 @endforeach
                 
               </ul> 
           </div>
           
           <div class="mobile-categories-sec">
                      <section class="mobile-category slider">
-                          <div class="slide">All</div>
-                          <div class="slide">Drinks</div>
-                          <div class="slide">Burger</div>
-                          <div class="slide">Non-Veg</div>
-                          <div class="slide">Ice Cream</div>
-                          <div class="slide">Pizza</div>
-                          <div class="slide">Cakes</div>
+                            <div class="slide"><a  data-filter="all" >All</a></div>
+							 @foreach($categorydata as $category)
+							 <div class="slide"><a data-filter="cat{{$category->id}}" >{{$category->Name}}</a></div>
+							 @endforeach
                      </section>
        
              </div>
@@ -111,12 +108,15 @@
                         <div class="my-flip-inner my-flip-right">
                            <div class="card my-flip-inner-wrapper">
                               <div class="my-flip-side my-flip-front">
+                                <div class="my-flip-details">
+                                   <h4 class="my-flip-heading right"><i class="fa fa-info" data-toggle="tooltip" title="{{$Products->information}}" aria-hidden="true"></i></h4>
+                                 </div>
                                  <div class="my-flip-image my-flip-image--1">
                                     <img src="{{asset('/public/'.$Products->image)}}">                         
                                  </div>
                                  <div class="my-flip-details">
                                     <h4 class="my-flip-heading">{{$Products->productName}}</h4>
-                                   <!-- <h4 class="my-flip-heading">Price :- ${{$Products->price}}</h4>  -->
+                                   <h4 class="my-flip-heading right">${{$Products->price}}</h4> 
                                  </div>
                               </div>
                               <div class="my-flip-side my-flip-back my-flip-back-1">
@@ -217,8 +217,13 @@ $( "#category li a" ).click(function() {
         .show();
     }
 });
+$('#example').tooltip({ boundary: 'window' })
 </script>
-
+<style type="text/css">
+ h4.my-flip-heading.right {
+    text-align: right;
+}
+</style>
 
 </body>
 </html>

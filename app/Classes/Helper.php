@@ -6,6 +6,7 @@ use App\Countries;
 use App\Cities;
 use App\States;
 use App\Reservation;
+use App\Restraunt;
 
 function siteUrl()
 {
@@ -191,6 +192,7 @@ function getApiCurrentUser()
     }
     return JWTAuth::parseToken()->authenticate();
 }
+
 function getCurrentUser()
 {
     $user = Auth::user();
@@ -256,10 +258,26 @@ function acountBalance($user_id)
 }
 function getProductCategory($product_id)
 {
-    //echo $product_id;
+    // echo $product_id;
     $data = DB::table('product_categories')
     ->leftjoin('categories as cs','cs.id','=','product_categories.category_id')
     ->where('product_id', $product_id)->pluck('cs.Name','cs.id');
+return $data->all();
+}
+function get_Category_by_restid($catid)
+{
+    // echo $catid;
+    $data =DB::table('restaurent_menus')->leftjoin('categories as cs','cs.id','=','restaurent_menus.category_id')->where('restaurant_id',$catid)->pluck('cs.Name','cs.id');
+return $data->all();
+}
+
+
+function getProductCategoryname($product_id)
+{
+    // echo $product_id;
+    $data = DB::table('product_categories')
+    ->leftjoin('categories as cs','cs.id','=','product_categories.category_id')
+    ->where('Name', $product_id)->pluck('cs.id','cs.name');
 return $data->all();
 }
 

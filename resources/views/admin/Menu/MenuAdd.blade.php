@@ -14,29 +14,60 @@ Goodiemenu
                             {{ session('status') }}
                         </div>
                     @endif
+                    @if ($errors->any())
+                    <div class="alert alert-warning">
+                    <ul>
+                    @foreach ($errors->all() as $message)
+                    <li>{{ $message }}</li>
+                    @endforeach
+                    </ul>
+                    </div>
+                    @endif
                 </div>
-                <div class="card-body">
-                    <form  id="" method="POST" action="{{route('restraunt.AddMenu')}}" enctype="multipart/form-data">
-                      {{ csrf_field() }}
-                  <div class="form-group">
-                    <label for="exampleFormControlSelect1">Select Restraunt</label>
-                    <br>
-                        <select class="form-control" name="restaurant_id" value="" required>
-                        @foreach($Restraunt as $row)
-                        <option value="{{ $row->id }}">{{ $row->restraunt_name }}</option>
+                <div class="row">
+                    <div class="form-group col-md-2">
+                      <button type="button" class="form-control submit_btn btn btn-primary btn-md btn-block waves-effect" value="Add Row" onclick="addRow('dataTable')">Add Row</button>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <button type="button" class="form-control submit_btn btn btn-primary btn-md btn-block waves-effect" value="Delete Row" onclick="deleteRow('dataTable')">Delete Row</button>
+                    </div>
+                </div>
+  <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table" id="dataTable">
+                      <thead class=" text-primary">
+                        <th>
+                        Checkbox
+                        </th>
+                        <th>
+                        Category
+                        </th>
+                        <th>
+                          Category Order
+                        </th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <INPUT type="checkbox"  name="chk"/>
+                          </td>
+                          <td>
+                           <select class="form-control category_id" id="category_id" name="category_id" value="" >
+                        <option value="">Select Category</option>
+                        @foreach($category as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->Name }}</option>
                         @endforeach
                         </select>
+                          </td>
+                          <td>
+                       <INPUT type="text" class="form-control" name="txt"/>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  <div class="form-group">
-                    <label for="category_id">Choose Categories</label>
-                    <br>
-                      @foreach($category as $cat)
-                      <input type="checkbox" class="check" id="category_id" name="category_id[]" value="{{ $cat->Name }}">
-                      <label for="category_id"> {{ $cat->Name }}</label>
-                      @endforeach
-                  </div>
-                  <button type="submit" class="submit_btn btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Save</button>
-                </form>
+                </div>
+                    
                 </div>
               </div>
             </div>
@@ -45,10 +76,91 @@ Goodiemenu
 
 @section('scripts')
 <script>
-// Add the following code if you want the name of the file appear on select
-$(".custom-file-input").on("change", function() {
-  var fileName = $(this).val().split("\\").pop();
-  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-});
+
+function addRow(tableID) {
+var rowmenu= 
+              '<td>'+
+              '<INPUT type="checkbox"  name="chk"/>'+
+              '</td>'+
+              '<td>'+
+              '<select class="form-control category_id" id="category_id" name="category_id" value="" >'+
+              '<option value="">Select Category</option>'+
+              '@foreach($category as $cat)'+
+              '<option value="{{ $cat->id }}">{{ $cat->Name }}</option>'+
+              '@endforeach'+
+              '</select>'+
+              '</td>'+
+              '<td>'+
+              '<INPUT type="text" class="form-control" name="txt"/>'+
+              '</td>'
+      var table = document.getElementById(tableID);
+      console.log(document.getElementById(tableID))
+
+      var rowCount = table.rows.length;
+      var row = table.insertRow(rowCount);
+
+      var colCount = table.rows[0].cells.length;
+
+      for(var i=0; i<colCount; i++) {
+
+        var newcell = row.insertCell(i);
+
+        
+
+        newcell.innerHTML = table.rows[0].cells[i].innerHTML;
+        //alert(newcell.childNodes);
+        switch(newcell.childNodes[0].type) {
+          case "text":
+              newcell.childNodes[0].value = "";
+              break;
+          case "checkbox":
+              newcell.childNodes[0].checked = false;
+              break;
+          case "select-one":
+              newcell.childNodes[0].selectedIndex = 0;
+              break;
+        }
+      }
+    }
+
+    function deleteRow(tableID) {
+      try {
+      var table = document.getElementById(tableID);
+      var rowCount = table.rows.length;
+
+      for(var i=0; i<rowCount; i++) {
+        var row = table.rows[i];
+        var chkbox = row.cells[0].childNodes[0];
+        if(null != chkbox && true == chkbox.checked) {
+          if(rowCount <= 1) {
+            alert("Cannot delete all the rows.");
+            break;
+          }
+          table.deleteRow(i);
+          rowCount--;
+          i--;
+        }
+
+
+      }
+      }catch(e) {
+        alert(e);
+      }
+    }
+
+function category(id)
+{
+  console.log(id)
+        $.ajax({
+            url:"{{ route('menu.add') }}",
+            method:'get',
+            data:{'user_id':id},
+            success:function(response)
+            {
+              $('#category').html(response)
+            }
+        });
+    
+}
 </script>
 @endsection

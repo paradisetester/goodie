@@ -46,4 +46,5 @@ class HomeController extends Controller
     // return view('Product.Index', compact('Product'));
     return view('welcome',compact('Product','categorydata'));
 }
+
 }

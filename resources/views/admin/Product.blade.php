@@ -8,7 +8,7 @@ Goodiemenu
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Create Product</h4>
+                  <h4 class="card-title ">Create Dish</h4>
                   @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -19,24 +19,25 @@ Goodiemenu
                       <form  id="" method="POST" action="{{route('product.addProduct')}}" enctype="multipart/form-data">
                       {{ csrf_field() }}
                       <div class="form-group">
-                      <label for="productName">Product Name</label>
+                      <label for="productName">Dish Name</label>
                       <input type="text" name="productName" required="" id="productName" class="form-control"  placeholder="Enter Product name" value="<?php echo old('productName') ?>" required>
                       </div>
                       <div class="form-group">
                       <label for="productName">Select Restaurent</label>
                       <br>
-                        <select class="form-control" name="uid" value="" >
+                        <select class="form-control" name="uid" value="" onchange="Restrauntid(this.value)">
+						 <option value="">Select Restaurent</option>
                         @foreach($user as $row)
                         <option value="{{ $row->id }}">{{ $row->name }}</option>
                         @endforeach
                         </select>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" id="category">
                       <label for="Slug">Select Category</label>
                       <br>
                       @foreach($category as $cat)
                       <input type="checkbox" class="check" id="category_id" name="category_id" value="{{ $cat->id }}">
-                      <label for="category_id"> {{ $cat->Name }}</label>
+                      <label for="category_id"> {{ $cat->Name }}</label> <br>
                       @endforeach
                       </div>
                       <div class="form-group">
@@ -51,6 +52,10 @@ Goodiemenu
                         </div>
                       </div>
                       <br>
+                      <div class="form-group">
+                      <label for="information">Information</label>
+                      <textarea rows="5" class="form-control" name="information" autocomplete="off" required></textarea>
+                      </div>
                       <div class="form-group">
                       <label for="description">Description</label>
                       <textarea rows="10" class="form-control" name="description" autocomplete="off" required></textarea>
@@ -75,5 +80,22 @@ $('input[type="checkbox"]').on('change', function() {
    $('input[type="checkbox"]').not(this).prop('checked', false);
 });
 
+function Restrauntid(id)
+{
+  console.log(id)
+        $.ajax({
+            url:"{{ route('product.getCategoryByRestrauntId') }}",
+            method:'get',
+            data:{'user_id':id},
+            success:function(response)
+            {
+              $('#category').html(response)
+              $('input[type="checkbox"]').on('change', function() {
+                $('input[type="checkbox"]').not(this).prop('checked', false);
+});
+            }
+        });
+    
+}
 </script>
 @endsection

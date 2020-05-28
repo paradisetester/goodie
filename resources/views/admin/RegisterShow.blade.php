@@ -53,7 +53,7 @@ Goodiemenu
                             {{$row->email}}
                           </td>
                           <td>
-                          <a href="{{url('/restraunt/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i> Edit</a>
+                          <a href="{{url('/restaurant/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i> Edit</a>
                           <a href="{{route('restraunt.delete',$row->id)}}" onclick="return confirm('Are you sure to delete User ?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</a>
                           </td>
                         </tr>

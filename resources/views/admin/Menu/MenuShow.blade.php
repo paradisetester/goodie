@@ -20,27 +20,35 @@ Goodiemenu
                     <table class="table">
                       <thead class=" text-primary">
                         <th>
-                          Restaurent Name
+                          User Name
                         </th>
                         <th>
-                          Product Categories
+                          Restaurant Name
+                        </th>
+                        <th>
+                          Dish Categories
                         </th>
                         <th>
                           Action
                         </th>
                       </thead>
                       <tbody>
-                        @foreach($Restaurent_menu as $row)
+                        @foreach($Restraunt as $row)
                         <tr>
                           <td>
+                            {{$row->UserName}}
+                          </td>
+                           <td>
                             {{$row->restraunt_name}}
                           </td>
-                          <td>
-                           {{$row->category_id}}
+                          <td><?php  $categorydata = get_Category_by_restid($row->id); ?>
+                           @foreach($categorydata as $category)
+                                     <span >{{$category}} ,</span>
+                             @endforeach
                           </td>
                           <td>
-                          <a href="{{url('restraunt/editMenu/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i> Edit</a>
-                          <a href="{{route('restraunt.menu.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Restaurent Menu ?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</a>
+                          <a href="{{url('restaurant/editMenu/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i> Edit</a>
+                          <a href="{{route('restraunt.menu.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Restaurant Menu ?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</a>
                           </td>
                         </tr>
                         @endforeach
@@ -48,7 +56,7 @@ Goodiemenu
                     </table>
                   </div>
                 </div>
-                <?php echo $Restaurent_menu->appends(request()->except('page'))->links(); ?>
+                <?php echo $Restraunt->appends(request()->except('page'))->links(); ?>
               </div>
             </div>
             </div>

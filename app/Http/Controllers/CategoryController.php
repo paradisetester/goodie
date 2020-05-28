@@ -57,14 +57,14 @@ class CategoryController extends Controller
     public function addCategory(Request $request) 
     {   
     $validator = Validator::make($request->all(), [ 
-    'Name' => 'required', 
-    'Slug' => 'required',  
+    'Name' => 'required'
     ]); 
         $Auth=auth()->user()->id;
         $category = new category;
         $category->Name = $request->input('Name');
+        $slug = str_replace(' ', '-', $category->Name);
         $category->uid =  $Auth;
-        $category->Slug = $request->input('Slug');
+        $category->Slug = $slug;
         $category->save();
        return redirect()->back()->with('status','Category Created Successfully');
     }
@@ -73,10 +73,11 @@ class CategoryController extends Controller
     public function updateCategory(Request $request) {
         $id = $request->id;
         $Auth=auth()->user()->id;
-        $category = category::where('id',$Auth)->first();
+        $category = category::where('id',$id)->first();
         $category->Name = $request->input('Name');
+        $slug = str_replace(' ', '-', $category->Name);
         $category->uid =  $Auth;
-        $category->Slug = $request->input('Slug');
+        $category->Slug = $slug;
         $category->save();
         return redirect()->route('category')->with('status','Category Updated Successfully');
         

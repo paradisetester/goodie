@@ -62,3 +62,49 @@
 .checked {
   color: orange;
 }
+
+/******** Shubham css ***********/
+.form_submit_btn {
+    text-align: right;
+    padding: 0 20px 30px;
+}
+h4.my-flip-heading {
+    display: inline-block;
+}
+h4.my-flip-heading.right {
+    float: right;
+}
+.custom-file-label {
+    padding: 10px 0;
+}
+.outter_form .form-group img {
+    width: 100%;
+    height: auto;
+}
+.dropdown-container {
+  display: none;
+  padding-left: 8px;
+}
+a.dropdown-btn {
+    position: relative;
+}
+
+.drop_icon {
+    position: absolute;
+    top: 7px;
+    right: -15px;
+}
+.cust_rst .card-title {
+    margin-bottom: 3px;
+    padding-top: 8px;
+    display: inline-block;
+}
+.cust_rst a.btn {
+    float: right;
+}
+@media (max-width:768px){
+	.blog-tabs-section .mobile-category .slide {
+    border: 1px solid #595656 !important;
+    color: #595656 !important;
+	}
+}
