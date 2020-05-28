@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
     use App\User;
     use Auth;
     use App\Restaurent_menu;
+    use App\productSubcategory;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Input;
     use Redirect;
@@ -153,6 +154,7 @@ class ProductsController extends Controller
     /*----- addProduct -----*/
     public function addProduct(Request $request) 
     {   
+        // return $this->request = $request;
     $validator = Validator::make($request->all(), [ 
     'productName' => 'required', 
     'price' => 'required', 
@@ -175,6 +177,18 @@ class ProductsController extends Controller
         $ProductCategory->category_id = $request->input('category_id');
         $ProductCategory->product_id = $Product->id;
         $ProductCategory->save();
+        $title = $request->input('title');
+        $Productprice = $request->input('Productprice');
+        $productimage = $this->fileuploadproduct($request);
+        for($i = 0; $i < count($title); $i++) {
+        $productSubcategory = new productSubcategory;
+        $productSubcategory->status =1;
+        $productSubcategory->product_id = $Product->id;
+        $productSubcategory->Productprice = $Productprice[$i];
+        $productSubcategory->title = $title[$i];
+        $productSubcategory->productimage = $productimage[$i];
+        $productSubcategory->save();
+}
        return redirect()->route('product')->with('status','Product Created Successfully');
     }
 

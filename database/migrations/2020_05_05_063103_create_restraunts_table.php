@@ -17,10 +17,14 @@ class CreateRestrauntsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('uid');
             $table->string('restraunt_name');
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('restraunt_name');
             $table->integer('Assignuser');
             $table->integer('ratings');
             $table->integer('contact');
             $table->string('address');
+            $table->string('zipcode');
             $table->string('image');
             $table->longText('description');
             $table->timestamps();

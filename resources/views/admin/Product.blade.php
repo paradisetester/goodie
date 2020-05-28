@@ -58,7 +58,10 @@ Goodiemenu
                       </div>
                       <div class="form-group">
                       <label for="description">Description</label>
-                      <textarea rows="10" class="form-control" name="description" autocomplete="off" required></textarea>
+                      <textarea rows="5" class="form-control" name="description" autocomplete="off" required></textarea>
+                      </div>
+                      <div class="append">
+                        
                       </div>
                       <button type="submit" class="submit_btn btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Save</button>
                       </form>
@@ -97,5 +100,65 @@ function Restrauntid(id)
         });
     
 }
+
+$(document).ready(function(){
+
+ var count = 1;
+
+ dynamic_field(count);
+
+ function dynamic_field(number)
+ {
+  html ='<div class="row delete">';
+  html +='<div class="form-group col-4">';
+  html +='<label for="price">Dish Sub Name</label>';
+  html +='<input type="text" name="title[]"  id="title" class="form-control"  placeholder="Enter Dish Sub Name" value="" required>';
+  html +='</div>';
+  html +='<div class="form-group col-4">';
+  html +='<label for="price">Dish Sub Price(in $)</label>';
+  html +='<input type="text" name="Productprice[]"  id="Productprice" class="form-control"  placeholder="Enter Dish Sub Price" value="" required>';
+  html +='</div>';
+  html +='<div class="form-group col-2">';
+  html +='<label for="myfile">Select a file:</label>';
+  html +='<input type="file" id="myfile" name="productimage[]" value=""><br><br>';
+  html +='</div>';
+                  
+
+
+        if(number > 1)
+        { 
+              html +='<div class="form-group col-2">';
+              html +='<button type="button" name="remove" id="" class="btn btn-danger remove">Remove</button>';
+              html += '</div>';
+              html +='</div>';
+            
+            $('.append').append(html);
+        }
+        else
+        {   
+            html +='<div class="form-group col-2">';
+            html +='<button type="button" name="add" id="add" class="btn btn-success">Add</button>';
+            html += '</div>';
+            html +='</div>';
+            $('.append').html(html);
+        }
+ }
+
+ $(document).on('click', '#add', function(){
+  count++;
+  dynamic_field(count);
+ });
+
+ $(document).on('click', '.remove', function(){
+  count--;
+  $(this).closest(".delete").remove();
+ });
+
+//  $(".custom-file-input").on("change", function() {
+//   var fileName = $(this).val().split("\\").pop();
+//   $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+// });
+
+});
 </script>
 @endsection

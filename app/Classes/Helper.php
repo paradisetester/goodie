@@ -157,6 +157,14 @@ function fileupload($request){
     $uploaded_file = 'images/uploads/'.date('Y').'/'.date('M').'/'.$filename;
     return $uploaded_file;
 }
+function fileuploadproduct($request){
+    $file = $request->file('productimage');
+    $destinationPath = publicbasePath().'/images/uploads/'.date('Y').'/'.date('M');
+    $filename = time().'_'.$file->getClientOriginalName();
+    $upload_success = $file->move($destinationPath, $filename);
+    $uploaded_file = 'images/uploads/'.date('Y').'/'.date('M').'/'.$filename;
+    return $uploaded_file;
+}
 function fileuploadExtra($request, $key){
     $file = $request->file($key);
     $destinationPath = publicbasePath().'/images/uploads/'.date('Y').'/'.date('M');
