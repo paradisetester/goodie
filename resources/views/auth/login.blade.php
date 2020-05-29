@@ -5,6 +5,11 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
+                @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
@@ -58,6 +63,16 @@
                                 </button>
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
                                         {{ __('Forgot Your Password?') }}
+                                    </a>
+                                <!--@if (Route::has('password.request'))-->
+                                <!--    <a class="btn btn-link" href="{{ route('password.request') }}">-->
+                                <!--        {{ __('Forgot Your Password?') }}-->
+                                <!--    </a>-->
+                                <!--@endif-->
+                            </div>
+                            <div class="col-md-8 offset-md-4">
+                                    <a class="btn btn-link" href="{{ route('Registerform') }}">
+                                        {{ __('Register') }}
                                     </a>
                                 <!--@if (Route::has('password.request'))-->
                                 <!--    <a class="btn btn-link" href="{{ route('password.request') }}">-->

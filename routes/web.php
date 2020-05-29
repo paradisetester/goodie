@@ -21,6 +21,9 @@ Route::get('/', 'dashboardController@welcome')->name('welcome');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/Registerform', 'RestaurantController@register')->name('Registerform');
+Route::get('/Registerform/validation', 'RestaurantController@validation')->name('Registerform.validation');
+Route::post('/Registerform/save', 'RestaurantController@registerSave')->name('Registerform.save');
 
 Route::group(['middleware'=>['auth','admin']], function () {	
 // Route::get('/dashboard', function () {

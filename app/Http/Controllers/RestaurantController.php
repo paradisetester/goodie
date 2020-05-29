@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
     use Auth;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Input;
+    use Illuminate\Support\MessageBag;
     use Redirect;
     use DB;
     use Validator;
@@ -186,4 +187,64 @@ class RestaurantController extends Controller
     $Restraunt = Restraunt::where('id', $id)->delete();
     return redirect()->route('restraunt.lists')->with('status','Restraunt Deleted Successfully');
     }
+
+    public function register(Request $request)
+    {
+    return view('admin.Restaurant.Register');
+    }
+
+    public static function validation($request, $id = null)
+    {
+        $rules = [
+        'email' => 'required|email|string|max:255|unique:users',
+        'restraunt_name' => 'required|string|max:255|unique:restraunts',
+        'contact' => 'required',
+        ];
+        if ($id) {
+        $rules['email'] = 'required|email|string|max:255|unique:users,email,'.$id.',id';
+        $rules['restraunt_name'] = 'required|string|max:255|unique:restraunts,restraunt_name,'.$id.',id';
+        }else{
+        $rules['email'] = 'required|email|string|max:255|unique:users';
+        $rules['restraunt_name'] = 'required|string|max:255|unique:restraunts';
+        }       
+        return $rules;
+    }
+    public function registerSave(Request $request)
+    {
+    $validator = Validator::make($request->all(), self::validation($request));
+    if ($validator->fails()) {
+    Session::flash ( 'danger', $validator->getMessageBag()->first() );
+    return Redirect::back()->withInput($request->all());
+    }
+
+    $user = new User;
+    $user->email =$request->input('email');
+    $user->role = 'user';
+    $password = randomPassword();
+    $user->password = bcrypt($password);
+    $user->save();
+    $Auth=$user->id;
+    $Restraunt = new Restraunt;
+    $Restraunt->firstname = $request->input('firstname');
+    $Restraunt->lastname = $request->input('lastname');
+    $restrantname = $request->input('restraunt_name');
+    $slug = str_replace(' ', '-', $restrantname);
+    $Restraunt->restraunt_name = $restrantname;
+    $Restraunt->slug = $slug;
+    $Restraunt->zipcode = $request->input('zipcode');
+    $Restraunt->contact = $request->input('contact');
+    $Restraunt->uid = $Auth;
+    $Restraunt->Assignuser = $user->id;
+    $Restraunt->save();
+    $emailSubject = 'Restaurant Registration Successfully';
+    $title = 'Your Company Request <b>';
+    $emailBody = view('Email.RegisterEmailtemplate', compact('Restraunt','user','title','password'));
+
+    SendEmail($user->email, $emailSubject, $emailBody, [], '', '', '', '');
+    // return redirect()->route('Registerform')->with('status','Restraunt Registered Successfully');
+    Session::flash ( 'success', "Restraunt Registered Successfully" );
+    return redirect()->route('Registerform');
+    }
+
+
 }
