@@ -9,13 +9,21 @@ Goodiemenu
     <div class="col-md-12">
       <div class="card">
         <div class="card-header card-header-primary">
+             <h4 class="card-title ">Dish Lists</h4>
+                 @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
+            </div>
+         <div class="card-body">
             @can('isAdmin')
-            <form  id="" method="get" action="{{route('product')}}" enctype="multipart/form-data">
+            <form class="dish_list_form"  id="" method="get" action="{{route('product')}}" enctype="multipart/form-data">
                       {{ csrf_field() }}
             <div class="row">
                      <div class="col-lg-4 col-md-4 col-sm-12">
                         <div class="form-group">
-                            <label for="productName">Select Restaurent</label>
+                            <label for="productName">Select Restaurant</label>
                         <br>
                            <select name="rest_name"class="form-control">
                               <option value="" selected>All</option>
@@ -53,14 +61,7 @@ Goodiemenu
                   </div>
                   </form>
                    @endcan
-                  <h4 class="card-title ">Dish Lists</h4>
-                  @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                </div>
-        <div class="card-body">
+                
           <div class="table-responsive">
                     <table class="table">
                       <thead class=" text-primary">
@@ -77,7 +78,7 @@ Goodiemenu
                           Image
                         </th>
                         <th>
-                          Restaurent Name
+                          Restaurant Name
                         </th>
                         <th>
                           Action
@@ -90,7 +91,14 @@ Goodiemenu
                             {{$row->productName}}
                           </td>
                           <td>
-                           {{$row->CaTegory}}
+                           <?php 
+						     $catArray = getProductCategory($row->id); 
+							 if($catArray){
+									 foreach($catArray as $key=> $cat){
+										 echo $cat.', ';
+									 }
+							  }
+						   ?>
                           </td>
                           <td>
                             ${{$row->price}}
@@ -102,9 +110,9 @@ Goodiemenu
                            {{$row->restraunt_name}}
                           </td>
                           <td>
-                          <a href="{{url('/product/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i> Edit</a>
+                          <a href="{{url('/product/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i></a>
                             @can('isAdmin')
-                            <a href="{{route('product.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Product?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</a>
+                            <a href="{{route('product.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Product?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
                               @endcan
                           </td>
                         </tr>

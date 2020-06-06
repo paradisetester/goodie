@@ -64,6 +64,7 @@
 }
 
 /******** Shubham css ***********/
+
 .form_submit_btn {
     text-align: right;
     padding: 0 20px 30px;
@@ -102,6 +103,88 @@ a.dropdown-btn {
 .cust_rst a.btn {
     float: right;
 }
+.card-header a {
+    color: #fff !important;
+}
+.form-group label {
+    margin-bottom: 0 !important;
+}
+.navbar .collapse ul li.nav-item.dropdown i.material-icons {
+    font-size: 35px !important;
+    color: #973b3b;
+}
+.navbar .collapse li.nav-item.dropdown .dropdown-item i.material-icons{
+        font-size: 18px!important;
+    margin-right: 4px;
+}
+.navbar .collapse li.nav-item.dropdown .dropdown-item:hover i.material-icons{
+    color:#fff;
+}
+label.custom-file-label {
+    font-weight: 600;
+}
+.catg_header .catg_add {
+    background: #ffffff;
+    color: #9931b1 ;
+    font-weight: 600;
+}
+.catg_header .catg_add:hover{
+    background-color: #fff;
+   color: #9931b1 ;
+}  
+.catg_header h4.card-title {
+    display: inline-block;
+    padding-top: 12px;
+}
+.modal-body .modal-footer {
+    border-top: none;
+}
+.navbar-nav li.nav-item.dropdown {
+    margin-top: 15px;
+}
+
+
+/***********************************/
+/******** Harwinder Css ***********/
+/*********************************/
+
+span.fa.fa-star {
+    color: #c7c7c7;
+}
+span.fa.fa-star.checked {
+    color: #a23db6;
+}
+.table thead tr th {
+    font-weight: 500;
+}
+.category_list {
+    margin: 0 0 5px;
+}
+
+label.custom-file-label {
+    background-color: #eee;
+    padding: 0 10px;
+    line-height: 41px;
+}
+.custom-file-label::after {
+    line-height: 27px;
+}
+.extra_option h4 {
+    color: #9c27b0;
+    font-weight: 500;
+}
+form.dish_list_form {
+    margin-bottom: 30px;
+    padding: 10px 20px;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 0 3px #ddd;
+}
+
+
+
+
+
+
 @media (max-width:768px){
 	.blog-tabs-section .mobile-category .slide {
     border: 1px solid #595656 !important;

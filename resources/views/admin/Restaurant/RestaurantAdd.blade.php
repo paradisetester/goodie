@@ -43,7 +43,7 @@ Goodiemenu
               <div class="col-md-8">
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="restraunt_name">Name</label>
+                    <label for="restraunt_name">User Name</label>
                           <input type="text" class="form-control" name="UserName" id="UserName" value="{{ old('UserName') }}" required autocomplete="UserName">
                           @error('UserName')
                             <span class="invalid-feedback" role="alert">
@@ -123,10 +123,20 @@ Goodiemenu
                               </select>
                         </div>
                   </div>
+                  
+                  <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="contact">Choose color</label>
+                        <input type="color" class="form-control" id="color" name="color" value="#dc3c4d">
+                      </div>
+            <div class="form-group col-md-8">
+                        
+                        </div>
+                  </div>
                    <div class="row">
                       <div class="form-group col-md-12">
                       <label for="description">Description</label>
-                      <textarea rows="10" class="form-control" name="description" autocomplete="off" required></textarea>
+                      <textarea rows="6" class="form-control" name="description" autocomplete="off" required></textarea>
                       </div>
                    </div>
               </div>

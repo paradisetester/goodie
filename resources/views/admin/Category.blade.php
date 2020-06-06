@@ -35,7 +35,7 @@ Goodiemenu
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title ">Category Lists</h4>
-                  <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">Add</button>
+                  
                   @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -43,6 +43,9 @@ Goodiemenu
                     @endif
                 </div>
                 <div class="card-body">
+                    
+                    <button type="button" class="cat_list_add_btn btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">Add</button>
+                    
                   <div class="table-responsive">
                     <table class="table">
                       <thead class=" text-primary">
@@ -66,8 +69,8 @@ Goodiemenu
                            {{$row->Slug}}
                           </td>
                           <td>
-                          <a href="{{url('category/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i> Edit</a>
-                          <a href="{{route('category.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Category?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</a>
+                          <a href="{{url('category/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i></a>
+                          <a href="{{route('category.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Category?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
                           </td>
                         </tr>
                         @endforeach

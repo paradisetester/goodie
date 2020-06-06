@@ -37,7 +37,11 @@ Goodiemenu
               <div class="col-md-4">
                 <div class="row">
                   <div class="form-group col-md-12">
+                    @if($Restraunt->image==null)
+                    <img src="{{asset('/public/assets/img/No-Photo-Available.png')}}" alt="Trulli" width="150" height="100">
+                    @else
                     <img src="{{asset('public/'.$Restraunt->image)}}" alt="Trulli" width="150" height="100">
+                    @endif
                   </div>
                   <div class="form-group col-md-12">
                     <label for="image">Upload Image</label>
@@ -51,7 +55,7 @@ Goodiemenu
               <div class="col-md-8">
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="restraunt_name">Name</label>
+                    <label for="restraunt_name">User Name</label>
                           <input type="text" class="form-control" name="UserName" id="UserName" value="{{$Restraunt->UserName}}" required autocomplete="UserName">
                           @error('UserName')
                             <span class="invalid-feedback" role="alert">
@@ -168,6 +172,15 @@ Goodiemenu
                           </select>
                            </div>
                         </div>
+                        <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="contact">Choose color</label>
+                        <input type="color" class="form-control" id="color" name="color" value="{{$Restraunt->color}}">
+                      </div>
+            <div class="form-group col-md-8">
+                        
+                        </div>
+                  </div>
                   
                    <div class="row">
                       <div class="form-group col-md-12">

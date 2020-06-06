@@ -15,6 +15,7 @@ namespace App\Http\Controllers;
     use DB;
     use App\Restraunt;
     use Validator;
+    use Session;
 
 class ProductsController extends Controller
 {
@@ -30,19 +31,18 @@ class ProductsController extends Controller
     $category = category::orderBy('id', 'desc')->get();
     $categorydata = category::orderBy('id', 'desc')->get();
     $ProductCategory = new ProductCategory();
-    $Product = Product::leftjoin('product_categories','product_categories.product_id','=','products.id')
-    ->leftjoin('categories','categories.id','=','product_categories.category_id')
-    ->leftjoin('restraunts','restraunts.Assignuser','=','products.uid')
-    ->select('categories.Name as CaTegory','product_categories.uid','products.*','restraunts.restraunt_name')
+    $Product = Product::leftjoin('restraunts','restraunts.Assignuser','=','products.uid')
+	->leftjoin('product_categories','product_categories.product_id','=','products.id')
+    ->select('products.*','restraunts.restraunt_name')
     ->where(function($query) use($restid,$catid){
         if ($restid) 
-        {
-          $query->where('product_categories.uid',$restid );
-       } 
-        if ($catid) {
-       $query->where('categories.id', $catid);
-        }
-        })->paginate(pagination());
+        { 
+			$query->where('products.uid',$restid );
+		}
+		if ($catid) {
+			$query->where('product_categories.category_id', $catid);
+        }		
+        })->orderBy('products.id','desc')->paginate(pagination());
     }
     else
     {
@@ -51,16 +51,11 @@ class ProductsController extends Controller
     $Restraunt=Restraunt::all();
     $category = category::orderBy('id', 'desc')->get();
     $categorydata = category::orderBy('id', 'desc')->get();
+
     $ProductCategory = new ProductCategory();
-    // $Product = Product::where('products.uid',$Auth)
-    // ->leftjoin('product_categories','product_categories.product_id','=','products.id')
-    // ->leftjoin('categories','categories.id','=','product_categories.category_id')
-    // ->select('categories.Name as CaTegory','products.*')->paginate(pagination());
-    $ProductCategory = new ProductCategory();
-    $Product = Product::where('products.uid',$Auth)->leftjoin('product_categories','product_categories.product_id','=','products.id')
-    ->leftjoin('categories','categories.id','=','product_categories.category_id')
+    $Product = Product::where('products.uid',$Auth)
     ->leftjoin('restraunts','restraunts.Assignuser','=','products.uid')
-    ->select('categories.Name as CaTegory','product_categories.uid','products.*','restraunts.restraunt_name')->paginate(pagination());
+    ->select('products.*','restraunts.restraunt_name')->orderBy('products.id','desc')->paginate(pagination());
     }
     
     return view('admin.ProductIndex',compact('Product','categorydata','category','Restraunt','restid','catid'));
@@ -100,12 +95,12 @@ class ProductsController extends Controller
 	public function getCategoryByRestrauntId(){
 		
 		$id = $_REQUEST['user_id'];
-		$catid = '';
+		$catid = array();
 		if(isset($_REQUEST['product_id']) && !empty($_REQUEST['product_id'])){
 			$product_id = $_REQUEST['product_id'];
 			$cat = getProductCategory($product_id);
 			foreach($cat as $k=>$v){
-				$catid = $k;
+				$catid[] = $k;
 			}			
 		}
 		
@@ -117,10 +112,10 @@ class ProductsController extends Controller
         foreach($categories as $key=>$val)
         {
 				$checked = '';
-			if($catid == $key){
+			if (in_array($key, $catid)){			
 				$checked = 'checked="checked"';
 			}
-            $html .= '<input type="checkbox" '.$checked.' class="check" id="category_id" name="category_id" value="'.$key.'"> <label for="category_id">'.$val.'</label>'.'<br>';
+            $html .= '<input type="checkbox" '.$checked.' class="checks" id="category_id'.$key.'" name="category_id[]" value="'.$key.'"> <label for="category_id'.$key.'">'.$val.'</label>'.'<br>';
         }
                 
         echo $html;
@@ -140,13 +135,13 @@ class ProductsController extends Controller
 	}else{
 		   $user = User::where('id', '!=', auth()->id())->where('status',1)->get();
 		  $category = category::orderBy('id', 'desc')->get();
+		  $ProductCategory = ProductCategory::where('product_id', $id)->first();
 	}
 
     $Product = Product::where('id', $id)->first();
-   
-    $ProductCategory = ProductCategory::where('product_id', $id)->first();
-   
-    return view('admin.EditProduct', array('Product'=>$Product ,'category'=>$category,'ProductCategory'=>$ProductCategory,'user'=>$user)); 
+	$extraProduct = productSubcategory::where('product_id', $id)->get();
+
+    return view('admin.EditProduct', array('Product'=>$Product ,'category'=>$category,'ProductCategory'=>$ProductCategory,'user'=>$user,'extraProduct'=>$extraProduct)); 
     
     
     }
@@ -154,15 +149,16 @@ class ProductsController extends Controller
     /*----- addProduct -----*/
     public function addProduct(Request $request) 
     {   
-        // return $this->request = $request;
+
     $validator = Validator::make($request->all(), [ 
     'productName' => 'required', 
     'price' => 'required', 
     'uid'=>'required',
     'image' => 'required', 
     'description' => 'required',
-    'information' => 'information',
-    ]);  
+    'information' => 'required',
+    ]);
+    
         $Auth=auth()->user()->id;
         $Product = new Product;
         $Product->uid = $request->input('uid');
@@ -172,24 +168,39 @@ class ProductsController extends Controller
         $Product->information = $request->input('information');
         $Product->description = $request->input('description');
         $Product->save();
-        $ProductCategory = new ProductCategory;
-        $ProductCategory->uid = $request->input('uid');
-        $ProductCategory->category_id = $request->input('category_id');
-        $ProductCategory->product_id = $Product->id;
-        $ProductCategory->save();
-        $title = $request->input('title');
-        $Productprice = $request->input('Productprice');
-        $productimage = $this->fileuploadproduct($request);
-        for($i = 0; $i < count($title); $i++) {
-        $productSubcategory = new productSubcategory;
-        $productSubcategory->status =1;
-        $productSubcategory->product_id = $Product->id;
-        $productSubcategory->Productprice = $Productprice[$i];
-        $productSubcategory->title = $title[$i];
-        $productSubcategory->productimage = $productimage[$i];
-        $productSubcategory->save();
-}
-       return redirect()->route('product')->with('status','Product Created Successfully');
+		
+		$categories = $request->input('category_id');
+		
+		foreach($categories as $cat){
+				$ProductCategory = new ProductCategory;
+				$ProductCategory->uid = $request->input('uid');
+				$ProductCategory->category_id = $cat;
+				$ProductCategory->product_id = $Product->id;
+				$ProductCategory->save();
+		}
+       
+		
+        $extra = $request->input('extra');
+        for($i = 0; $i < count($extra['title']); $i++) {
+            
+			
+			$productSubcategory = new productSubcategory;
+			if(!empty ($extra['title'][$i]))
+			{
+			    $extraprice=0;
+			  if($extra['Productprice'][$i])
+			  {
+			      $extraprice=$extra['Productprice'][$i];
+			  }
+		    $productSubcategory->status =1;
+            $productSubcategory->product_id = $Product->id;
+            $productSubcategory->Productprice = $extraprice;
+            $productSubcategory->title = $extra['title'][$i];
+            $productSubcategory->save();
+			}
+		}
+        Session::flash ( 'success', "Product Created Successfully" );
+        return redirect()->route('product');
     }
 
         /*----- update -----*/
@@ -208,12 +219,37 @@ class ProductsController extends Controller
         $Product->description = $request->input('description');
         $Product->information = $request->input('information');
         $Product->save();
-        $ProductCategory = ProductCategory::where('product_id',$id)->first();
-        // $ProductCategory->uid = $Auth;
-        $ProductCategory->uid = $request->input('uid');
-        $ProductCategory->category_id = $request->input('category_id');
-        $ProductCategory->product_id = $Product->id;
-        $ProductCategory->save();
+		
+        $categories = $request->input('category_id');
+
+if($categories){
+	 $Productcategory = ProductCategory::where('product_id', $id)->delete();
+		foreach($categories as $cat){
+					$ProductCategory = new ProductCategory;
+					$ProductCategory->uid = $request->input('uid');
+					$ProductCategory->category_id = $cat;
+					$ProductCategory->product_id = $Product->id;
+					$ProductCategory->save();
+		}
+}	
+        $extra = $request->input('extra');
+		
+        for($i = 0; $i < count($extra['title']); $i++) {
+            if(!empty($extra['title'][$i])){
+            $extraprice=0;
+            if($extra['Productprice'][$i])
+            {
+            $extraprice=$extra['Productprice'][$i];
+            }
+            $productSubcategory = new productSubcategory;
+            $productSubcategory->status =1;
+            $productSubcategory->product_id = $Product->id;
+            $productSubcategory->Productprice = $extraprice;
+            $productSubcategory->title = $extra['title'][$i];
+            
+            $productSubcategory->save();
+            }
+		}
        return redirect()->route('product')->with('status','Product Updated Successfully');
         
     }
@@ -222,6 +258,15 @@ class ProductsController extends Controller
     {
         $Product = Product::where('id', $id)->delete();
         $Productcategory = ProductCategory::where('product_id', $id)->delete();
+        $productSubcategory = productSubcategory::where('Product_id', $id)->delete();
         return redirect()->route('product')->with('status','Product Deleted Successfully');
     }
+	
+	 public function deleteOption(Request $request)
+    {
+		$id =  $request->input('id');
+		$productSubcategory = productSubcategory::where('id', $id)->delete();
+		return $productSubcategory ? 1 :0 ;
+    }
+	
 }

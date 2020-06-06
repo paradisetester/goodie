@@ -30,25 +30,7 @@ class MenuController extends Controller
     /*----- add -----*/
     public function add(Request $request)
     { 
-        // if(request()->ajax())
-        // {
-        //     $id =$request->user_id;
-        //     $Restraunt = Restraunt::where('id',$id)->first();
-        //     $assignid =$Restraunt->Assignuser;
-        //     $Product = Product::leftjoin('product_categories','product_categories.product_id','=','products.id')
-        //                 ->leftjoin('categories','categories.id','=','product_categories.category_id')
-        //                 ->select('categories.Name as CaTegory','products.*','categories.id')->where('product_categories.uid',$assignid)->get();
-        //     $html='<label for="category_id">Choose Categories</label><br>';
-        //     foreach($Product as $cat)
-        //     {
-        //         $html .= '<input type="checkbox" class="check" id="category_id" name="category_id[]" value="'.$cat->CaTegory.'"> <label for="category_id">'.$cat->CaTegory.'</label> ';
-                
-        //     }
-        //     echo $html;
-        // }
-
-        // else
-        // {
+       
             $Restraunt= Restraunt::all();
             $category=category::all();
             $Product = Product::leftjoin('product_categories','product_categories.product_id','=','products.id')
@@ -56,98 +38,124 @@ class MenuController extends Controller
             ->select('categories.Name as CaTegory','products.*')->get();
             $user = User::all();
             return view('admin.Menu.MenuAdd',compact('user','category','Restraunt','Product'));
-        // }
+      
          
     }
     public function AddMenu(Request $request) {
- //        return 'hit me';
-	// 	$validator = Validator::make($request->all(), [ 
-	// 		'restaurant_id' => ['required', 'unique:restaurent_menus'],
-	// 		'category_id' => 'required',
-	// 	]);
-    
- //    if ($validator->fails()) {
- //    Session::flash('error', $validator->messages()->first());
- //    return redirect()->back()->withErrors($validator)
- //        ->withInput();
- //    }
-	// $restaurant_id = $request->input('restaurant_id');
- //    $menus = $request->input('category_id');
- //    foreach ($menus as $menu) {
-	// 	$Restaurent_menu = Restaurent_menu::where('category_id',$menu)->where('restaurant_id',$restaurant_id)->first();
-	
-	// 		if(empty($Restaurent_menu)){
-				
-	// 			$Restaurent = new Restaurent_menu;
-	// 			$Restaurent->restaurant_id = $request->input('restaurant_id');
-	// 			$Restaurent->category_id = $menu;
-	// 			$Restaurent->save();	
-	// 		}else{
-	// 			 return redirect()->route('menu.lists')->with('status','This category already exist for this menu');
-	// 		}
-		
- //    }
+ 
         $request->validate([
             'restaurant_id' => 'required',
             'category_id' => 'required',
             'orderby' => 'required',
         ]);
+            
+        $restaurant_id = $request->input('restaurant_id');
+        
+            
+        
              $Restaurent = new Restaurent_menu;
-             $Restaurent->restaurant_id = $request->input('restaurant_id');
              $Restaurent->category_id = $request->input('category_id');
-             return $Restaurent->orderby = $request->input('orderby');
+             $Restaurent->restaurant_id = $request->input('restaurant_id');
+             
+             
+            if (Restaurent_menu::where('restaurant_id', '=', $request->input('restaurant_id'))->where('category_id', '=', $request->input('category_id'))->where('orderby', '=', $request->input('orderby'))->exists()) {
+                
+              return json_encode(array(
+                    "statusCode"=>201
+                ));
+            }
+            else
+            {
+                $Restaurent->orderby = $request->input('orderby');
+            }
              $Restaurent->save();
-        return json_encode(array(
-            "statusCode"=>200
-        ));
+            $html = $this->menuList($restaurant_id);
+            return json_encode(array(
+                "statusCode"=>200,
+                "menuList"=>$html
+            ));
      // return redirect()->route('menu.lists')->with('status','Restraunt Menu Created Successfully');
     }
+    
+    
+ public function GetMenu(Request $request) {        
+            
+        $restaurant_id = $request->input('restaurant_id');      
+            
+        $html = $this->menuList($restaurant_id);
+            return json_encode(array(
+                "statusCode"=>200,
+                "menuList"=>$html
+            ));
+    }
 
-  
+  public function menuList($restaurant_id){
+     $Restaurent_menu = Restaurent_menu::where('restaurant_id',$restaurant_id)->leftjoin('categories','categories.id','=','restaurent_menus.category_id')->select('categories.Name','restaurent_menus.*')->get();
+     
+     
+     if($Restaurent_menu){
+            $html = '<div class="table-responsive"><table class="table menu_table">';
+            $html .= '<thead class=" text-primary"> <tr><th  class="srno" >Sr.No</th> <th class="names">Category</th> <th class="position">Position</th> <th class="deletbtn">Action</th> </tr></thead>';
+            $i = 1;
+             foreach($Restaurent_menu as $key=>$val){        
+                $html .= '<tr><td class="srno">'.$i.'</td> <td class="names">'.$val->Name.'</td>  <td class="names">'.$val->orderby.'</td> <td class="deletbtn"><a class="btn btn-sm btn-outline-danger" onclick="deletemenurow(this,'.$val->id.')" title="delete"><i class="fa fa-trash"></i></a></td> </tr>';     
+                $i++;
+             }
+             $html .= '</table></div>';
+     }
+     return $html;
+  }
     
     /*----- edit -----*/
     public function EditMenu($ids) {
-    $id = $this->decodeID($ids);
-    $Restraunt =Restraunt::all();
-    $category=category::all();
-    $user = User::all();
-	
-$Restaurent_menu =Restraunt::where('restraunts.id',$id)->leftjoin('restaurent_menus','restaurent_menus.restaurant_id','=','restraunts.id')->select('restaurent_menus.*')->pluck('restaurent_menus.category_id');
-$arrCat = array();
-foreach($Restaurent_menu as $rm){
-	$arrCat[] =$rm;
-}
-    return view('admin.Menu.MenuEdit', array('arrCat'=>$arrCat,'id'=>$id,'category'=>$category,'Restraunt'=>$Restraunt));
+		$id = $this->decodeID($ids);
+		$Restraunt =Restraunt::all();
+		$category=category::all();
+		$user = User::all();
+			
+		$Restaurent_menu =Restraunt::where('restraunts.id',$id)->leftjoin('restaurent_menus','restaurent_menus.restaurant_id','=','restraunts.id')->select('restaurent_menus.*')->pluck('restaurent_menus.category_id');
+		$arrCat = array();
+		foreach($Restaurent_menu as $rm){
+			$arrCat[] =$rm;
+		}
+		return view('admin.Menu.MenuEdit', array('arrCat'=>$arrCat,'id'=>$id,'category'=>$category,'Restraunt'=>$Restraunt));
     }
         
 
     /*----- update -----*/
     public function UpdateMenu(Request $request) {
-	
-		$id = $request->id;
-		$categories = $request->input('category_id');
-		$restaurant_id = $request->input('restaurant_id');
-		$Restaurent_menu_old = Restaurent_menu::where('restaurant_id',$restaurant_id)->get();
-		
-		Restaurent_menu::where('restaurant_id', $restaurant_id)->delete();
-		foreach($categories as $val){
-		
-				$Restaurent_menu = new Restaurent_menu;
-				$Restaurent_menu->restaurant_id = $restaurant_id;
-				$Restaurent_menu->category_id = $val;
-				$Restaurent_menu->save();	
-			
-		}
+    
+        $id = $request->id;
+        $categories = $request->input('category_id');
+        $restaurant_id = $request->input('restaurant_id');
+        $Restaurent_menu_old = Restaurent_menu::where('restaurant_id',$restaurant_id)->get();
+        
+        Restaurent_menu::where('restaurant_id', $restaurant_id)->delete();
+        foreach($categories as $val){
+        
+                $Restaurent_menu = new Restaurent_menu;
+                $Restaurent_menu->restaurant_id = $restaurant_id;
+                $Restaurent_menu->category_id = $val;
+                $Restaurent_menu->save();   
+            
+        }
     return redirect()->route('menu.lists')->with('status','Restraunt Menu Updated Successfully');
     
     }
-	
+    
    
    
     public function delete($id)
     {
-        return $id;
     $Restaurent_menu = Restaurent_menu::where('restaurant_id', $id)->delete();
     return redirect()->route('menu.lists')->with('status','Restraunt Menu Deleted Successfully');
+    }
+
+    public function deleteMenu(Request $request)
+    {
+       
+    $id =  $request->input('id');
+    $Restaurent_menu = Restaurent_menu::where('id', $id)->delete();
+    return $Restaurent_menu ? 1 :0 ;
     }
 }

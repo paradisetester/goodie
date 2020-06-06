@@ -91,7 +91,11 @@ Goodiemenu
                             @endif
                           </td>
                           <td>
+                            @if($row->image==null)
+                           <img src="{{asset('/public/assets/img/No-Photo-Available.png')}}" alt="Trulli" width="70" height="50">
+                           @else
                            <img src="{{asset('public/'.$row->image)}}" alt="Trulli" width="70" height="50">
+                           @endif
                           </td>
                           <td>
                           @if($row->status==1)
@@ -99,19 +103,19 @@ Goodiemenu
                             {{ csrf_field() }}
                             <input type="hidden" name="status" value="0">
                             <input type="hidden" name="id" value="{{$row->Assignuser}}">
-                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-ban"></i> block</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-ban"></i></button>
                         </form>
                           @elseif($row->status==0)
                           <form method="POST" action="{{route('restraunt.status')}}">
                               {{ csrf_field() }}
                             <input type="hidden" name="status" value="1">
                             <input type="hidden" name="id" value="{{$row->Assignuser}}">
-                            <button type="submit" class="btn btn-sm btn-outline-success"><i class="fa fa-unlock"></i> Unblock</button>
+                            <button type="submit" class="btn btn-sm btn-outline-success"><i class="fa fa-unlock"></i></button>
                         </form>
                           @endif
-                           <a href="{{url('/restaurant/'.$row->slug)}}" class="btn btn-sm btn-outline-success" target="_blank"><i class="fa fa-eye"></i> View</a>
-                          <a href="{{url('/restaurant/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-primary"><i class="fa fa-pencil"></i> Edit</a>
-                          <a href="{{route('restraunt.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Restaurant ?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i> Delete</a>
+                           <a href="{{url('/restaurant/'.$row->slug)}}" class="btn btn-sm btn-outline-success" target="_blank"><i class="fa fa-eye"></i></a>
+                          <a href="{{url('/restaurant/edit/'.base64_encode($row->id.'/'.time()))}}" class="btn btn-sm btn-outline-primary"><i class="fa fa-pencil"></i></a>
+                          <a href="{{route('restraunt.delete',$row->id)}}" onclick="return confirm('Are you sure to delete Restaurant ?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
                           </td>
                         </tr>
                         @endforeach

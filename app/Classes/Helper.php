@@ -264,6 +264,7 @@ function acountBalance($user_id)
 	$companyCreditPoints = $companyCredit->points;
     return $companyCreditPoints;
 }
+
 function getProductCategory($product_id)
 {
     // echo $product_id;
@@ -272,10 +273,19 @@ function getProductCategory($product_id)
     ->where('product_id', $product_id)->pluck('cs.Name','cs.id');
 return $data->all();
 }
+
+function getProductExtraOption($product_id)
+{
+    // echo $product_id;
+    $data = DB::table('product_subcategories')->where('product_id', $product_id)->pluck('title','Productprice');
+return $data->all();
+}
+
+
 function get_Category_by_restid($catid)
 {
     // echo $catid;
-    $data =DB::table('restaurent_menus')->leftjoin('categories as cs','cs.id','=','restaurent_menus.category_id')->where('restaurant_id',$catid)->pluck('cs.Name','cs.id');
+$data =DB::table('restaurent_menus')->leftjoin('categories as cs','cs.id','=','restaurent_menus.category_id')->where('restaurant_id',$catid)->orderBy('orderby', 'asc')->pluck('cs.Name','cs.id');
 return $data->all();
 }
 

@@ -169,13 +169,11 @@ a:hover {
 }
 
 a:not([href]):not([tabindex]) {
-  color: inherit;
   text-decoration: none;
 }
 
 a:not([href]):not([tabindex]):hover,
 a:not([href]):not([tabindex]):focus {
-  color: inherit;
   text-decoration: none;
 }
 
@@ -590,13 +588,11 @@ a:hover {
 }
 
 a:not([href]):not([tabindex]) {
-  color: inherit;
   text-decoration: none;
 }
 
 a:not([href]):not([tabindex]):hover,
 a:not([href]):not([tabindex]):focus {
-  color: inherit;
   text-decoration: none;
 }
 
@@ -17026,11 +17022,10 @@ a .material-icons {
   vertical-align: middle;
 }
 
-.form-check,
-label {
+.form-check, label {
   font-size: 14px;
   line-height: 1.42857;
-  color: #AAAAAA;
+  color: #000000;
   font-weight: 400;
 }
 
@@ -18905,7 +18900,10 @@ Copyright (c) 2015 Daniel Eden
   }
 }
 
+
 /*          Changes for small display      */
+
+
 @media (max-width: 991px) {
   .form-group textarea {
     padding-top: 15px;
@@ -19284,6 +19282,7 @@ Copyright (c) 2015 Daniel Eden
   }
 
   @keyframes topbar-x {
+      
     0% {
       top: 0px;
       transform: rotate(0deg);
@@ -19740,6 +19739,7 @@ Copyright (c) 2015 Daniel Eden
     font-size: 1rem;
     margin: 0;
   }
+  
 }
 
 @media (min-width: 992px) {
@@ -19754,3 +19754,54 @@ Copyright (c) 2015 Daniel Eden
 }
 
 /*# sourceMappingURL=dashboard-free.css.map */
+
+
+/***********************************/
+/******** Harwinder Css ***********/
+/*********************************/
+
+.btn.btn-outline-success:hover,
+.btn.btn-outline-danger:hover,
+.btn.btn-outline-primary:hover {
+    color: #ffffff;
+}
+.btn.btn-outline-success:hover {
+    background-color: #4caf50;
+}
+.btn.btn-outline-danger:hover {
+    background-color: #f44336;
+}
+.btn.btn-outline-primary:hover {
+    background-color: #9c27b0;    
+}
+.btn.btn-sm {
+    padding: 8px 10px;
+}
+.card .table tr td form {
+    display: inline-block;
+}
+select.form-control:not([size]):not([multiple]) {
+    height: 36px;
+}
+input#color {
+    width: 40px;
+    height: 40px;
+    line-height: normal;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

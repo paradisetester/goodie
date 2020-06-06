@@ -30,9 +30,9 @@ color:#000;
 
 .form_outter_ld input {
     width: 100%;
-        padding: 5px;
-        background:#efebeb;
-            border: 1px solid #9a9797;
+    padding: 5px;
+    background:#efebeb;
+    border: 1px solid #9a9797;
 }
 section.ld_outter {
     position: relative;
@@ -44,7 +44,7 @@ section.ld_outter {
     top: 20px;
     color: #545454;
     border-radius: 30px;
-    box-shadow: 0 5px 15px 0 #8c8c8c;
+    /*box-shadow: 0 5px 15px 0 #8c8c8c;*/
 }
 .orange{
   background:#f4b04a;
@@ -76,6 +76,16 @@ h1.ct_logo span {
 }
 .form_outter_ld label {
     margin: 15px 0 5px;
+    position: relative;
+    display: inline-block;
+    width: auto !important;
+}
+.form_outter_ld label span {
+    position: absolute;
+    color: red;
+    top: 0;
+    margin-left: 2px;
+    font-size: 18px;
 }
 .form_outter_ld button {
     background: #dc3c4d;
@@ -220,6 +230,9 @@ footer {
     margin-bottom:10px;
     font-weight: 600;
 }
+.second_font{
+    text-align:center;
+}
 }
 @media (max-width:575px){
    h1.ct_logo {
@@ -258,7 +271,7 @@ footer {
              <div class="col-md-7 col-sm-12">
                  <div class="inner_content">
                       <h1>Get a Beautiful Modern Menu To Connect More With Your Customers</h1>
-                      <p>Upload beautiful photos of your dishes to your GoodieMenu for a better customer experience online. We publish your GoodieMenu to sites like Google, Tripadvisor, Yelp and more</p>
+                      <p>Upload beautiful photos of your dishes to your GoodieMenu for a better customer experience online. We publish your GoodieMenu to sites like Google, Tripadvisor, Yelp and more.</p>
                  </div>
              </div>
              <div class="col-md-5 col-sm-12">
@@ -275,18 +288,18 @@ footer {
                            @endif
                     <form method="post" action="{{ route('Registerform.save') }}">
                      @csrf
-                     <label for="fname">First name:</label>
-                    <input type="text" name="firstname" value="<?php echo old('firstname') ?>" required="">
-                     <label for="fname">Last name:</label>
-                    <input type="text" name="lastname" value="<?php echo old('lastname') ?>" required="">
-                    <label for="fname">Phone:</label>
-                    <input type="text" name="contact" value="<?php echo old('contact') ?>" required="">
-                    <label for="fname">Restaurant name:</label>
-                    <input type="text" name="restraunt_name" value="<?php echo old('restraunt_name') ?>" required="">
-                    <label for="fname">Email:</label>
-                    <input type="email" name="email" value="<?php echo old('email') ?>" required="">
-                    <label for="fname">Zipcode:</label>
-                    <input type="text" name="zipcode" value="<?php echo old('zipcode') ?>" required="">
+                     <label for="fname">First Name<span>*</span></label>
+                    <input type="text" name="firstname" value="<?php echo old('firstname') ?>" required="" autocomplete="off">
+                     <label for="fname">Last Name<span>*</span></label>
+                    <input type="text" name="lastname" value="<?php echo old('lastname') ?>" required="" autocomplete="off">
+                    <label for="fname">Phone<span>*</span></label>
+                    <input type="number" name="contact" value="<?php echo old('contact') ?>" maxlength="10" required="" autocomplete="off">
+                    <label for="fname">Restaurant Name<span>*</span></label>
+                    <input type="text" name="restraunt_name" value="<?php echo old('restraunt_name') ?>" required="" autocomplete="off">
+                    <label for="fname">Email<span>*</span></label>
+                    <input type="email" name="email" value="<?php echo old('email') ?>" required="" autocomplete="off">
+                    <label for="fname">Zipcode<span>*</span></label>
+                    <input type="text" name="zipcode" value="<?php echo old('zipcode') ?>" required="" autocomplete="off">
                     <div class="sign_up_box">
                     <button type="submit" value="">Sign Up</button>
                     </form>
@@ -355,7 +368,7 @@ footer {
               <div class="col-md-8 col-sm-12">
                   <div class="footer_menu">
                       <ul>
-                         <li>2020 GoodieMenu LLC. All rights reserved</li>
+                         <li>@2020 GoodieMenu LLC. All rights reserved</li>
                          <li><a href="#">Terms of Use</a></li>
                          <li><a href="#">Privacy Policy</a></li>
                          <li><a href="#">Help</a></li>

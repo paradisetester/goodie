@@ -36,20 +36,20 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>-->
-                    @if($Restraunt->image==null)
+                    <?php
+                    $hex = $Restraunt->color;
+                    list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
+                     $colour="rgba($r, $g, $b, 0.87)";
+                    ?>
                   <div class="col-md-6 col-sm-6 col-xs-6">
                     <div class="logo">
+                        @if($Restraunt->restraunt_name==null)
                         <a class="navbar-brand" href="#">Menu </a>
+                        @else
+                        <a class="navbar-brand" href="#">Menu | {{$Restraunt->restraunt_name}} </a>
+                        @endif
                     </div>
                  </div>
-                 @else
-                 <div class="col-md-6 col-sm-6 col-xs-6">
-                    <div class="logo">
-                         <img src="{{asset('public/'.$Restraunt->image)}}" alt="Trulli" width="60" height="60">
-                    </div>
-                 </div>
-                 @endif
-                 
             <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="menu col-md-6 col-sm-6 col-xs-6">
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -81,77 +81,87 @@
     <section class="blog-tabs-section">
         <div class="container">
             <div class="categories-sec">
-              <ul class="nav nav-tabs" id="category">
-                <li><a  data-filter="all" >All</a></li>
-				<?php $cats =  get_Category_by_restid($Restraunt->id); 
+                <ul class="nav nav-tabs" id="category">
+                    <li><a  data-filter="all" >All</a></li>
+				    <?php $cats =  get_Category_by_restid($Restraunt->id); 
 				
-				?>
-                 @foreach($cats as $ro=>$v)
-                <li><a data-filter="cat{{$ro}}" >{{$v}}</a></li>
-                @endforeach
+				    ?>
+                    @foreach($cats as $ro=>$v)
+                    <li><a data-filter="cat{{$ro}}" >{{$v}}</a></li>
+                    @endforeach
                 
-              </ul> 
-          </div>
+                </ul> 
+            </div>
           
-          <div class="mobile-categories-sec">
-                     <section class="mobile-category slider">
-                          <div class="slide">All</div>
+            <div class="mobile-categories-sec">
+                <section class="mobile-category slider">
+                    <div class="slide">All</div>
                           @foreach($Product as $row)
-                          <div class="slide">{{$row->CaTegory}}</div>
+                    <div class="slide">{{$row->CaTegory}}</div>
                           @endforeach
-                     </section>
+                </section>
        
              </div>
 
           
-          
-              <div class="tab-content">
-               <div id="home" class="tab-pane fade in active">
-                <div class="row">
-                  @foreach($Product as $Products)
-                  <?php 
+             <div class="row">
+                <div class="tab-content">
+                    <div id="home" class="tab-pane fade in active">
+                
+                    @foreach($Product as $Products)
+                    <?php 
                   
-                  $catids = '';
-                $catArray = getProductCategory($Products->id); 
-                  if($catArray){
+                    $catids = '';
+                    $catArray = getProductCategory($Products->id); 
+                    $extraOption = getProductExtraOption($Products->id); 
+                    if($catArray){
                          foreach($catArray as $key=> $cat){
                              $catids = $key;
                          }
-                  }
-                  ?>
-                  <div class="col-lg-4 col-md-4 mb-4 post"  data-cat="cat<?php echo $catids; ?>">
-                     <div class="my-flip-container">
-                        <div class="my-flip-inner my-flip-right">
-                           <div class="card my-flip-inner-wrapper">
-                              <div class="my-flip-side my-flip-front">
-                                <div class="my-flip-details">
-                                   <h4 class="my-flip-heading right"><i class="fa fa-info" id="example" data-toggle="tooltip" title="{{$Products->information}}" aria-hidden="true"></i></h4>
-                                 </div>
-                                 <div class="my-flip-image my-flip-image--1">
-                                    <img src="{{asset('/public/'.$Products->image)}}">                         
-                                 </div>
-                                 <div class="my-flip-details">
-                                    <h4 class="my-flip-heading">{{$Products->productName}}</h4> 
-                                   <h4 class="my-flip-heading right">${{$Products->price}}</h4>
-                                 </div>
-                              </div>
-                              <div class="my-flip-side my-flip-back my-flip-back-1">
-                                 <div class="my-flip-back-inner">
-                                    <div class="my-flip-price">
-                                       <p>{{$Products->description}}</p>
+                    }
+                    ?>
+     
+                       
+                  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 post"  data-cat="cat<?php echo $catids; ?>">
+                    <div class="dish_box">
+                         <div class="dish_image">
+                            @if($Products->image==null)
+                             <img src="{{asset('/public/assets/img/demoLogo.png')}}"> 
+                             @else
+                            <img src="{{asset('/public/'.$Products->image)}}">  
+                            @endif                        
+                         </div>
+                         <div class="my-flip-details">
+                            <h4 class="my-flip-heading">{{$Products->productName}}</h4>
+                           <h4 class="my-flip-heading right">${{$Products->price}}</h4> 
+                         </div>
+                      
+                          <div class="dish_cont_on_hover" style="background-color:{{$colour}}">
+                              <div class="hover_cont_outr">
+                            <p class="hover_desc">{{$Products->description}}</p>
+                                    <?php
+                                    if($extraOption){ ?>
+                                    <div class="dish_extraopt">
+                                    <div class="extraoption">Extra Option</div>
+                                        <?php
+                                        foreach($extraOption as $ke=> $opt){
+                                        echo '<p><span class="title">'.$opt.'</span><span class="price">$'.$ke.'</span></p>';
+                                        }
+                                        ?>  
                                     </div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
+                                    <?php }   ?>
+                                    
+                                    </div>
+                          </div>
+                      </div>
                   </div>
+                    
                   @endforeach
                 </div>
-                </div>
+             </div>
                   
-              </div>
-              </div>      
+        </div>
+    </section>
 
 <script>
 function Copy() 

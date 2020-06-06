@@ -4,6 +4,22 @@
 Goodiemenu
 @endsection
 @section('content')
+
+<style>
+
+.itemrow {
+    width: 100%;
+    display: flex;
+}
+
+.menulist_heading {
+    font-size: 22px;
+    font-weight: 500;
+    margin-top: 34px;
+    margin-bottom: 20px;
+}
+
+</style>
  <div class="row">
             <div class="col-md-12">
               <div class="card">
@@ -24,51 +40,54 @@ Goodiemenu
                     </div>
                     @endif
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-2">
-                      <button type="button" class="form-control submit_btn btn btn-primary btn-md btn-block waves-effect" value="Add Row" onclick="addRow('dataTable')">Add Row</button>
-                    </div>
-                    <div class="form-group col-md-2">
-                      <button type="button" class="form-control submit_btn btn btn-primary btn-md btn-block waves-effect" value="Delete Row" onclick="deleteRow('dataTable')">Delete Row</button>
-                    </div>
-                </div>
-  <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table" id="dataTable">
-                      <thead class=" text-primary">
-                        <th>
-                        Checkbox
-                        </th>
-                        <th>
-                        Category
-                        </th>
-                        <th>
-                          Category Order
-                        </th>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <INPUT type="checkbox"  name="chk"/>
-                          </td>
-                          <td>
-                           <select class="form-control category_id" id="category_id" name="category_id" value="" >
-                        <option value="">Select Category</option>
-                        @foreach($category as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->Name }}</option>
+                <div class="card-body">
+                      <input type="hidden" name="_token" id="csrf" value="{{Session::token()}}">
+                  <div class="form-group ">
+                    <label for="exampleFormControlSelect1">Select Restaurant</label>
+                    <br>
+                    <div class="cust-select">
+                        <select class="form-control restaurant_id" id="restaurant_id" name="restaurant_id" value="" >
+                        <option value="">Select Restaurant</option>
+                        @foreach($Restraunt as $row)
+                        <option value="{{ $row->id }}">{{ $row->restraunt_name }}</option>
                         @endforeach
                         </select>
-                          </td>
-                          <td>
-                       <INPUT type="text" class="form-control" name="txt"/>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                        </div>
+                  </div>
+            <div class="row append">
+            <div class="itemrow">
+            <div class="Category1 categorydiv col-md-6">
+            <div class="form-group cust-select" id="category">
+            <label for="category_id">Choose Categories</label>
+            <br>
+            <select class="form-control category_id" id="category_id" name="category_id" value="" >
+            <option value="">Select Category</option>
+            @foreach($category as $cat)
+            <option value="{{ $cat->id }}">{{ $cat->Name }}</option>
+            @endforeach
+            </select>
+            </div>
+            </div>
+            <div class="form-group col-md-4" id="category">
+            <label for="category_id">Category Order</label>
+            <input type="number" name="orderby"  id="orderby" class="form-control orderby"  placeholder="Enter Order No" value="" >
+            </div>
+            <div class="form-group col-md-2" id="category">
+            <a class="submit_btn btn btn-primary btn-md btn-block waves-effect">Add More</a>
+            </div>
+
+            </div>
+            </div> 
+
+            <div class="menulist_section" >
+            <div class="menulist_heading">Menus List</div>
+            <div class="menulist"></div>
+            </div>
+        
+        
                   </div>
                 </div>
-                    
-                </div>
+        
               </div>
             </div>
             </div>
@@ -76,91 +95,166 @@ Goodiemenu
 
 @section('scripts')
 <script>
+  
+ $(document).on('change','.restaurant_id',function(){
+    var restaurant_id = $('#restaurant_id').val();
 
-function addRow(tableID) {
-var rowmenu= 
-              '<td>'+
-              '<INPUT type="checkbox"  name="chk"/>'+
-              '</td>'+
-              '<td>'+
-              '<select class="form-control category_id" id="category_id" name="category_id" value="" >'+
-              '<option value="">Select Category</option>'+
-              '@foreach($category as $cat)'+
-              '<option value="{{ $cat->id }}">{{ $cat->Name }}</option>'+
-              '@endforeach'+
-              '</select>'+
-              '</td>'+
-              '<td>'+
-              '<INPUT type="text" class="form-control" name="txt"/>'+
-              '</td>'
-      var table = document.getElementById(tableID);
-      console.log(document.getElementById(tableID))
-
-      var rowCount = table.rows.length;
-      var row = table.insertRow(rowCount);
-
-      var colCount = table.rows[0].cells.length;
-
-      for(var i=0; i<colCount; i++) {
-
-        var newcell = row.insertCell(i);
-
-        
-
-        newcell.innerHTML = table.rows[0].cells[i].innerHTML;
-        //alert(newcell.childNodes);
-        switch(newcell.childNodes[0].type) {
-          case "text":
-              newcell.childNodes[0].value = "";
-              break;
-          case "checkbox":
-              newcell.childNodes[0].checked = false;
-              break;
-          case "select-one":
-              newcell.childNodes[0].selectedIndex = 0;
-              break;
+       $.ajax({
+              url: '<?php echo route('restraunt.GetMenu') ?>',
+              type: "POST",
+              data: {
+                _token: $("#csrf").val(),
+                restaurant_id: restaurant_id
+              },
+              cache: false,
+              success: function(dataResult){
+               
+                var obj = jQuery.parseJSON( dataResult );
+                 if(obj.statusCode==200){
+                
+                 $('.menulist').html(obj.menuList);
+                 }                         
+              }
+          });
+   });
+   
+   
+   
+$(document).on('click','.submit_btn',function(){
+  var restaurant_id = $('#restaurant_id').val();
+  var category_id = $(this).parents('.itemrow').find('.category_id').val();
+  var orderby = $(this).parents('.itemrow').find('.orderby').val();
+  
+  
+  if(restaurant_id!="" && category_id!="" && orderby!="" ){
+        $.ajax({
+              url: '<?php echo route('restraunt.AddMenu') ?>',
+              type: "POST",
+              data: {
+                  _token: $("#csrf").val(),
+                  restaurant_id: restaurant_id,
+                  category_id: category_id,
+                  orderby: orderby
+              },
+              cache: false,
+              success: function(dataResult){
+           var obj = jQuery.parseJSON( dataResult );
+           if(obj.statusCode==200){
+           
+           $('.menulist').html(obj.menuList);
+           }
+                  else if(obj.statusCode==201){
+                     swal("Cancelled!", "Menu Already Exist!", "error");
+                  }else{
+             swal("Cancelled!", "Error contact with administrator!", "error");
+          }   
+               
         }
-      }
-    }
+    });
+          
+  }
+});
 
-    function deleteRow(tableID) {
-      try {
-      var table = document.getElementById(tableID);
-      var rowCount = table.rows.length;
+function deletemenurow(this_,id)
+{
+   // this_.closest('tr').remove();
+   var id =id;
+$.ajax({
+        url: '{{ url("/restaurant/delete/Menuoption") }}',
+        type: "post",
+        cache: false,
+        data: {id : id, _token: $("#csrf").val()},
+        success: function(dataResult){ 
+          if(dataResult==1)
+          {
+            this_.closest('tr').remove();
+          }
+        }
+    });
 
-      for(var i=0; i<rowCount; i++) {
-        var row = table.rows[i];
-        var chkbox = row.cells[0].childNodes[0];
-        if(null != chkbox && true == chkbox.checked) {
-          if(rowCount <= 1) {
-            alert("Cannot delete all the rows.");
+}
+</script>
+@endsection
+@section('scripts')
+<script>
+
+var x, i, j, l, ll, selElmnt, a, b, c;
+/*look for any elements with the class "cust-select":*/
+x = document.getElementsByClassName("cust-select");
+l = x.length;
+for (i = 0; i < l; i++) {
+  selElmnt = x[i].getElementsByTagName("select")[0];
+  ll = selElmnt.length;
+  /*for each element, create a new DIV that will act as the selected item:*/
+  a = document.createElement("DIV");
+  a.setAttribute("class", "select-selected");
+  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+  x[i].appendChild(a);
+  /*for each element, create a new DIV that will contain the option list:*/
+  b = document.createElement("DIV");
+  b.setAttribute("class", "select-items select-hide");
+  for (j = 1; j < ll; j++) {
+    /*for each option in the original select element,
+    create a new DIV that will act as an option item:*/
+    c = document.createElement("DIV");
+    c.innerHTML = selElmnt.options[j].innerHTML;
+    c.addEventListener("click", function(e) {
+        /*when an item is clicked, update the original select box,
+        and the selected item:*/
+        var y, i, k, s, h, sl, yl;
+        s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+        sl = s.length;
+        h = this.parentNode.previousSibling;
+        for (i = 0; i < sl; i++) {
+          if (s.options[i].innerHTML == this.innerHTML) {
+            s.selectedIndex = i;
+            h.innerHTML = this.innerHTML;
+            y = this.parentNode.getElementsByClassName("same-as-selected");
+            yl = y.length;
+            for (k = 0; k < yl; k++) {
+              y[k].removeAttribute("class");
+            }
+            this.setAttribute("class", "same-as-selected");
             break;
           }
-          table.deleteRow(i);
-          rowCount--;
-          i--;
         }
-
-
-      }
-      }catch(e) {
-        alert(e);
-      }
-    }
-
-function category(id)
-{
-  console.log(id)
-        $.ajax({
-            url:"{{ route('menu.add') }}",
-            method:'get',
-            data:{'user_id':id},
-            success:function(response)
-            {
-              $('#category').html(response)
-            }
-        });
-    
+        h.click();
+    });
+    b.appendChild(c);
+  }
+  x[i].appendChild(b);
+  a.addEventListener("click", function(e) {
+      /*when the select box is clicked, close any other select boxes,
+      and open/close the current select box:*/
+      e.stopPropagation();
+      closeAllSelect(this);
+      this.nextSibling.classList.toggle("select-hide");
+      this.classList.toggle("select-arrow-active");
+    });
 }
+function closeAllSelect(elmnt) {
+  /*a function that will close all select boxes in the document,
+  except the current select box:*/
+  var x, y, i, xl, yl, arrNo = [];
+  x = document.getElementsByClassName("select-items");
+  y = document.getElementsByClassName("select-selected");
+  xl = x.length;
+  yl = y.length;
+  for (i = 0; i < yl; i++) {
+    if (elmnt == y[i]) {
+      arrNo.push(i)
+    } else {
+      y[i].classList.remove("select-arrow-active");
+    }
+  }
+  for (i = 0; i < xl; i++) {
+    if (arrNo.indexOf(i)) {
+      x[i].classList.add("select-hide");
+    }
+  }
+}
+/*if the user clicks anywhere outside the select box,
+then close all select boxes:*/
+document.addEventListener("click", closeAllSelect);
 </script>
 @endsection

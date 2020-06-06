@@ -47,9 +47,7 @@ The above copyright notice and this permission notice shall be included in all c
         Tip 2: you can also add an image using data-image tag
     -->
       <div class="logo">
-          <a href="{{url('/')}}" class="simple-text logo-normal"><img src="{{asset('/public/assets/img/Capture.png')}}" alt="Trulli" width="80" height="70">
-          goodieMenu
-        </a>
+          <a href="{{url('/dishes')}}" class="simple-text logo-normal"><img src="{{asset('/public/assets/img/Capture.png')}}" alt="Trulli" width="auto" height="90"></a>
         </div>
       <div class="sidebar-wrapper">
         <ul class="nav">

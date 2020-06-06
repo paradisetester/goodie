@@ -25,6 +25,7 @@ class CreateRestrauntsTable extends Migration
             $table->integer('contact');
             $table->string('address');
             $table->string('zipcode');
+            $table->string('color');
             $table->string('image');
             $table->longText('description');
             $table->timestamps();

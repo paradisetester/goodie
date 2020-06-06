@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/', 'dashboardController@welcome')->name('welcome');
+Route::get('/dishes', 'dashboardController@welcome')->name('welcome');
+Route::get('/', 'RestaurantController@register')->name('Registerform');
+Route::get('/Registerform/validation', 'RestaurantController@validation')->name('Registerform.validation');
+Route::post('/Registerform/save', 'RestaurantController@registerSave')->name('Registerform.save'); 
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/Registerform', 'RestaurantController@register')->name('Registerform');
-Route::get('/Registerform/validation', 'RestaurantController@validation')->name('Registerform.validation');
-Route::post('/Registerform/save', 'RestaurantController@registerSave')->name('Registerform.save');
 
 Route::group(['middleware'=>['auth','admin']], function () {	
 // Route::get('/dashboard', function () {
@@ -33,9 +33,12 @@ Route::get('/categorylist', 'MenuController@getcategory')->middleware('can:isAdm
 Route::get('/menu/lists', 'MenuController@index')->middleware('can:isAdmin')->name('menu.lists');
 Route::get('/restaurant/menu/add', 'MenuController@add')->middleware('can:isAdmin')->name('menu.add');
 Route::post('/restaurant/AddMenu', 'MenuController@AddMenu')->middleware('can:isAdmin')->name('restraunt.AddMenu');
+Route::post('/restaurant/GetMenu', 'MenuController@GetMenu')->middleware('can:isAdmin')->name('restraunt.GetMenu');
 Route::post('/restaurant/updateMenu', 'MenuController@UpdateMenu')->middleware('can:isAdmin')->name('restraunt.updateMenu');
 Route::get('/restaurant/editMenu/{id}', 'MenuController@EditMenu')->middleware('can:isAdmin')->name('restraunt.edit.id');
 Route::get('/restaurant/delete/Menu/{id}', 'MenuController@delete')->middleware('can:isAdmin')->name('restraunt.menu.delete');
+Route::post('/restaurant/delete/Menuoption', 'MenuController@deleteMenu')->middleware('can:isAdmin')->name('restraunt.menuoption.delete');
+Route::post('/restaurant/delete/productoption', 'ProductsController@deleteOption')->middleware('can:isAdmin')->name('restraunt.productoption.delete');
 
 Route::get('/restaurant/lists', 'RestaurantController@index')->middleware('can:isAdmin')->name('restraunt.lists');
 Route::get('/restaurant/add', 'RestaurantController@add')->middleware('can:isAdmin')->name('restraunt.add');

@@ -36,11 +36,11 @@ class RestaurantController extends Controller
     $user = User::where('id',$id)->update(['status'=>$status]);
     if($status==1)
     {
-        return redirect()->back()->with('status','Restraunt Blocked Successfully'); 
+        return redirect()->back()->with('status','Restaurant Blocked Successfully'); 
     }
    else
     {
-    return redirect()->back()->with('status','Restraunt Unblocked Successfully'); 
+    return redirect()->back()->with('status','Restaurant Unblocked Successfully'); 
     }
     }
     public function addRestraunt(Request $request) {
@@ -75,18 +75,22 @@ class RestaurantController extends Controller
     $Auth=auth()->user()->id;
     $Restraunt = new Restraunt;
     $Restraunt->UserName = $request->input('UserName');
+    $Restraunt->firstname = $request->input('UserName');
+    $Restraunt->lastname = 'null';
     $Restraunt->restraunt_name = $request->input('restraunt_name');
     $Restraunt->videolink = $request->input('videolink');
     $Restraunt->uid = $Auth;
     $Restraunt->slug = $slug;
     $Restraunt->Assignuser = $user->id;
     $Restraunt->address = $request->input('address');
+    $Restraunt->zipcode = 'null';
+    $Restraunt->color = $request->input('color');
     $Restraunt->contact = $request->input('contact');
     $Restraunt->ratings = $request->input('ratings');
     $Restraunt->image = fileupload($request);
     $Restraunt->description = $request->input('description');
     $Restraunt->save();
-    return redirect()->route('restraunt.lists')->with('status','Restraunt Created Successfully');
+    return redirect()->route('restraunt.lists')->with('status','Restaurant Created Successfully');
     }
 
   
@@ -117,6 +121,8 @@ class RestaurantController extends Controller
     $Auth=auth()->user()->id;
     $Restraunt->uid = $Auth;
     $Restraunt->UserName = $request->input('UserName');
+    $Restraunt->firstname = $request->input('UserName');
+    $Restraunt->lastname = 'null';
     $Restraunt->restraunt_name = $request->input('restraunt_name');
     $Restraunt->videolink = $request->input('videolink');
     $restrantname = $request->input('restraunt_name');
@@ -124,6 +130,8 @@ class RestaurantController extends Controller
     $Restraunt->slug = $slug;
     $Restraunt->Assignuser = $Assuid;
     $Restraunt->address = $request->input('address');
+    $Restraunt->zipcode = 'null';
+    $Restraunt->color = $request->input('color');
     $Restraunt->contact = $request->input('contact');
     $Restraunt->ratings = $request->input('ratings');
     if($request->hasFile('image')) 
@@ -138,7 +146,7 @@ class RestaurantController extends Controller
     $user->email =$request->input('email');
     $user->password =Hash::make($request->password);
     $user->save();
-    return redirect()->route('restraunt.lists')->with('status','Restraunt Updated Successfully');
+    return redirect()->route('restraunt.lists')->with('status','Restaurant Updated Successfully');
     
     }
     
@@ -156,6 +164,7 @@ class RestaurantController extends Controller
     $Restraunt->address = $request->input('address');
     $Restraunt->contact = $request->input('contact');
     $Restraunt->ratings = $request->input('ratings');
+    $Restraunt->color = $request->input('color');
     if($request->hasFile('image')) 
     {
     $Restraunt->image = $this->fileupload($request);         
@@ -169,7 +178,7 @@ class RestaurantController extends Controller
     $user->password =Hash::make($request->password);
     $user->save();
     
-    return redirect()->route('dashboard')->with('status','Restraunt Updated Successfully');
+    return redirect()->route('dashboard')->with('status','Restaurant Updated Successfully');
     
     }
     
@@ -185,7 +194,7 @@ class RestaurantController extends Controller
     public function delete($id)
     {
     $Restraunt = Restraunt::where('id', $id)->delete();
-    return redirect()->route('restraunt.lists')->with('status','Restraunt Deleted Successfully');
+    return redirect()->route('restraunt.lists')->with('status','Restaurant Deleted Successfully');
     }
 
     public function register(Request $request)
@@ -198,14 +207,16 @@ class RestaurantController extends Controller
         $rules = [
         'email' => 'required|email|string|max:255|unique:users',
         'restraunt_name' => 'required|string|max:255|unique:restraunts',
-        'contact' => 'required',
+        'contact' => 'required|numeric|digits:10|unique:restraunts',
         ];
         if ($id) {
         $rules['email'] = 'required|email|string|max:255|unique:users,email,'.$id.',id';
         $rules['restraunt_name'] = 'required|string|max:255|unique:restraunts,restraunt_name,'.$id.',id';
+        $rules['contact'] = 'required|numeric|digits:10|unique:restraunts,contact,'.$id.',id';
         }else{
         $rules['email'] = 'required|email|string|max:255|unique:users';
         $rules['restraunt_name'] = 'required|string|max:255|unique:restraunts';
+        $rules['contact'] = 'required|numeric|digits:10|unique:restraunts';
         }       
         return $rules;
     }
@@ -242,7 +253,7 @@ class RestaurantController extends Controller
 
     SendEmail($user->email, $emailSubject, $emailBody, [], '', '', '', '');
     // return redirect()->route('Registerform')->with('status','Restraunt Registered Successfully');
-    Session::flash ( 'success', "Restraunt Registered Successfully" );
+    Session::flash ( 'success', "Restaurant Registered Successfully" );
     return redirect()->route('Registerform');
     }
 

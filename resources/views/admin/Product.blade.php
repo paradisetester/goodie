@@ -9,22 +9,28 @@ Goodiemenu
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title ">Create Dish</h4>
-                  @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    @if(Session::has('warning'))
+                    <div class="alert alert-warning" role="alert">{{ Session::get('warning') }}</div>
+                    @endif
+                    @if(Session::has('danger'))
+                    <div class="alert alert-danger" role="alert">{{ Session::get('danger') }}</div>
+                    @endif
+                    @if(Session::has('success'))
+                    <div class="alert alert-success" role="alert">{{ Session::get('success') }}</div>
                     @endif
                 </div>
                 <div class="card-body">
                       <form  id="" method="POST" action="{{route('product.addProduct')}}" enctype="multipart/form-data">
                       {{ csrf_field() }}
-                      <div class="form-group">
+                      
+                 <div class="row">
+                    <div class="form-group col-md-6 col-sm-12 col-12">
                       <label for="productName">Dish Name</label>
                       <input type="text" name="productName" required="" id="productName" class="form-control"  placeholder="Enter Product name" value="<?php echo old('productName') ?>" required>
                       </div>
-                      <div class="form-group">
+                      
+                      <div class="form-group col-md-6 col-sm-12 col-12">
                       <label for="productName">Select Restaurent</label>
-                      <br>
                         <select class="form-control" name="uid" value="" onchange="Restrauntid(this.value)">
 						 <option value="">Select Restaurent</option>
                         @foreach($user as $row)
@@ -32,37 +38,52 @@ Goodiemenu
                         @endforeach
                         </select>
                       </div>
+                      </div>
+                      
                       <div class="form-group" id="category">
                       <label for="Slug">Select Category</label>
-                      <br>
+                    <div class="row">
                       @foreach($category as $cat)
-                      <input type="checkbox" class="check" id="category_id" name="category_id" value="{{ $cat->id }}">
-                      <label for="category_id"> {{ $cat->Name }}</label> <br>
+                      <div class="category_list col-md-3 col-sm-4 col-6">
+                      <input type="checkbox" class="check" id="category_id{{ $cat->id }}" name="category_id[]" value="{{ $cat->id }}">
+                      <label for="category_id{{ $cat->id }}"> {{ $cat->Name }}</label>
+                      </div>
                       @endforeach
                       </div>
-                      <div class="form-group">
+                      </div>
+                      
+                      <div class="row">
+                      <div class="form-group col-md-6 col-sm-12 col-12">
                       <label for="price">Price(in $)</label>
                       <input type="text" name="price"  id="price" class="form-control"  placeholder="Enter Price" value="<?php echo old('price') ?>" required>
                       </div>
-                       <div class="form-group">
+                       <div class="form-group col-md-6 col-sm-12 col-12">
                         <label for="image">Upload Image</label>
                         <div class="custom-file mb-3">
-                          <input type="file" class="custom-file-input" id="customFile" name="image">
+                          <input type="file" class="custom-file-input " id="customFile" name="image">
                           <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                       </div>
-                      <br>
-                      <div class="form-group">
+                      </div>
+                      
+                       <div class="row">
+                      <div class="form-group col-md-6 col-sm-12 col-12">
                       <label for="information">Information</label>
                       <textarea rows="5" class="form-control" name="information" autocomplete="off" required></textarea>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group col-md-6 col-sm-12 col-12">
                       <label for="description">Description</label>
                       <textarea rows="5" class="form-control" name="description" autocomplete="off" required></textarea>
                       </div>
-                      <div class="append">
-                        
                       </div>
+					 <div> 
+						 <div class="extra_option">
+						  <h4>Extra Option</h4>
+						  </div>
+						  <div class="append">
+							
+						  </div>
+					  </div>
                       <button type="submit" class="submit_btn btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Save</button>
                       </form>
                 </div>
@@ -79,9 +100,9 @@ $(".custom-file-input").on("change", function() {
   $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 });
 // for check one checkbox at time
-$('input[type="checkbox"]').on('change', function() {
+/* $('input[type="checkbox"]').on('change', function() {
    $('input[type="checkbox"]').not(this).prop('checked', false);
-});
+}); */
 
 function Restrauntid(id)
 {
@@ -94,7 +115,7 @@ function Restrauntid(id)
             {
               $('#category').html(response)
               $('input[type="checkbox"]').on('change', function() {
-                $('input[type="checkbox"]').not(this).prop('checked', false);
+               // $('input[type="checkbox"]').not(this).prop('checked', false);
 });
             }
         });
@@ -110,18 +131,15 @@ $(document).ready(function(){
  function dynamic_field(number)
  {
   html ='<div class="row delete">';
-  html +='<div class="form-group col-4">';
+  html +='<div class="form-group col-lg-4 col-md-4 col-sm-12 col-12">';
   html +='<label for="price">Dish Sub Name</label>';
-  html +='<input type="text" name="title[]"  id="title" class="form-control"  placeholder="Enter Dish Sub Name" value="" required>';
+  html +='<input type="text" name="extra[title][]"  id="title" class="form-control"  placeholder="Enter Dish Sub Name" value="">';
   html +='</div>';
-  html +='<div class="form-group col-4">';
+  html +='<div class="form-group col-lg-4 col-md-4 col-sm-12 col-12">';
   html +='<label for="price">Dish Sub Price(in $)</label>';
-  html +='<input type="text" name="Productprice[]"  id="Productprice" class="form-control"  placeholder="Enter Dish Sub Price" value="" required>';
+  html +='<input type="text" name="extra[Productprice][]"  id="Productprice" class="form-control"  placeholder="Enter Dish Sub Price" value="">';
   html +='</div>';
-  html +='<div class="form-group col-2">';
-  html +='<label for="myfile">Select a file:</label>';
-  html +='<input type="file" id="myfile" name="productimage[]" value=""><br><br>';
-  html +='</div>';
+
                   
 
 
@@ -154,10 +172,10 @@ $(document).ready(function(){
   $(this).closest(".delete").remove();
  });
 
-//  $(".custom-file-input").on("change", function() {
-//   var fileName = $(this).val().split("\\").pop();
-//   $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-// });
+$(".custom-file1-input1").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file1-label1").addClass("selected").html(fileName);
+});
 
 });
 </script>

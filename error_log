@@ -1,1 +1,7 @@
 [04-May-2020 12:01:27 UTC] PHP Fatal error:  Cannot use Illuminate\Support\Facades\Validator as Validator because the name is already in use in /home/aisolsc8/public_html/goodie/app/Http/Controllers/dashboardController.php on line 16
+[03-Jun-2020 10:15:37 UTC] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/aisolsc8/public_html/goodie/app/Classes/Helper.php on line 288
+[03-Jun-2020 10:15:40 UTC] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/aisolsc8/public_html/goodie/app/Classes/Helper.php on line 288
+[03-Jun-2020 10:15:47 UTC] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/aisolsc8/public_html/goodie/app/Classes/Helper.php on line 288
+[03-Jun-2020 10:16:46 UTC] PHP Parse error:  syntax error, unexpected 'orderBy' (T_STRING) in /home/aisolsc8/public_html/goodie/app/Classes/Helper.php on line 288
+[03-Jun-2020 10:16:49 UTC] PHP Parse error:  syntax error, unexpected 'orderBy' (T_STRING) in /home/aisolsc8/public_html/goodie/app/Classes/Helper.php on line 288
+[05-Jun-2020 07:34:17 UTC] PHP Fatal error:  Cannot use [] for reading in /home/aisolsc8/public_html/goodie/app/Http/Controllers/ProductsController.php on line 165
